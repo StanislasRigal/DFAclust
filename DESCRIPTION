@@ -5,8 +5,7 @@ Authors@R:
     person("Stanislas", "Rigal", , "stanislas.rigal@ens-lyon.fr", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-3180-4592"))
 Description: The package provides a toolbox based on Dynamic Factor Analysis to 1) identify common latent trends in species dynamics in aggregated multispecies indices, 2) display the variability of species dynamics and 3) extract clusters of species with similar dynamics within the species groups used for the indices.
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
