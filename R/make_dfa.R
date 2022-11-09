@@ -4,7 +4,7 @@
 #' @param data_ts_se A `data.table`. Dataset of uncertainty (e.g. standard error) of species time series. It should be provided as a data.table with log species uncertainty time-series in row, the first column for species names' codes and years as column names.
 #' @param nfac A `integer`. Number of trends for the DFA. Default is 0 to test several values (between `mintrend` and `maxtrend`).
 #' @param mintrend An `integer`. Minimum number of trends to test. Default is 1.
-#' @param maxtrend An `integer`. Minimum number of trends to test. Default is 1.
+#' @param maxtrend An `integer`. Minimum number of trends to test. Default is 5.
 #' @param AIC A `logical` value. `TRUE` computes and displays the AIC, `FALSE` does not. Default is `TRUE`.
 #' @param species_sub A `data.frame` of species names. It should be provided with species in row, the first column for complete species names and the second column for species names' codes.
 #' @param nboot An `integer`. Number of bootstrap iteration. Default is 500.
@@ -18,6 +18,16 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' data(species_ts)
+#' data(species_uncert_ts)
+#' data(species_name)
+#' dfa_aus_farm <- make_dfa(data_ts = y_farm,data_ts_se = obs_se_farm,
+#'species_sub = species_aus_farm,nfac = 0,
+#'mintrend = 1,maxtrend = 5,AIC = TRUE,
+#'nboot = 10,silent = TRUE,control = list(),
+#'se_log = FALSE,is_mean_centred = FALSE, min_year_sc=2000)
+#'}
 make_dfa <- function(data_ts,
                      data_ts_se,
                      nfac = 0,

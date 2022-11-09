@@ -7,13 +7,13 @@
 rescale_index(index, se, ref, denom = 1.01)
 }
 \arguments{
-\item{index}{A numeric vector containing indices of a species across years.}
+\item{index}{A \code{numeric} vector containing indices of a species across years.}
 
-\item{se}{A numeric vector containing uncertainty that comes with indices of a species across years.}
+\item{se}{A \code{numeric} vector containing uncertainty that comes with indices of a species across years.}
 
-\item{ref}{A logical vector containing the years to be used at reference for the scaling (TRUE) and the years not used in the reference (FALSE).}
+\item{ref}{A \code{logical} vector containing the years to be used at reference for the scaling (TRUE) and the years not used in the reference (FALSE).}
 
-\item{denom}{A numeric value inferior to 1 and superior to 0 to calculate the variance of the first year.}
+\item{denom}{A \code{numeric} value inferior to 1 and superior to 0 to calculate the variance of the first year.}
 }
 \value{
 A matrix/array with log mean-centred indices and uncertainty

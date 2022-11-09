@@ -3,6 +3,7 @@
 S3method(AIC,tmb)
 export(core_dfa)
 export(group_from_dfa_boot1)
+export(make_dfa)
 export(plot_group_boot)
 export(rescale_index)
 useDynLib(DFAclust)

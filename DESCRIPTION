@@ -12,7 +12,10 @@ RoxygenNote: 7.2.1
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-Depends: TMB, RcppEigen
+Depends: 
+    TMB,
+    RcppEigen,
+    R (>= 2.10)
 LinkingTo: TMB, RcppEigen
 Imports: 
     dplyr,
@@ -30,3 +33,4 @@ Imports:
     see,
     stringr,
     vegan
+LazyData: true

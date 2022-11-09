@@ -18,11 +18,11 @@ core_dfa(
 
 \item{data_ts_se}{A \code{data.table}. Dataset of uncertainty (e.g. standard error) of species time series. It should be provided as a data.table with species uncertainty time-series in row, the first column for species names' codes and years as column names.}
 
-\item{nfac}{A \code{integer}. Number of trends for the DFA.}
+\item{nfac}{An \code{integer}. Number of trends for the DFA.}
 
-\item{AIC}{A \code{logical} value. TRUE computes and displays the AIC, FALSE does not. Default is TRUE.}
+\item{AIC}{A \code{logical} value. \code{TRUE} computes and displays the AIC, \code{FALSE} does not. Default is TRUE.}
 
-\item{silent}{A \code{logical} value. TRUE silences \code{MakeADFun()}, FALSE does not. Default is TRUE.}
+\item{silent}{A \code{logical} value. \code{TRUE} silences \code{MakeADFun()}, \code{FALSE} does not. Default is TRUE.}
 
 \item{control}{A \code{list}. Control option for \code{MakeADFun()}. Default is list().}
 }
