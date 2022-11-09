@@ -6,8 +6,10 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' tmbObj <- MakeADFun(data = dataTmb, parameters = tmbPar, map = tmbMap, random= c("x"), DLL= "dfa_model_se", silent = silent)
 #' aic <- AIC.tmb(tmbObj)
+#' }
 AIC.tmb <- function(obj) {
   as.numeric(2 * obj$env$value.best + 2*(sum(obj$env$lfixed())))
 }
