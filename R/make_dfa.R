@@ -1,39 +1,38 @@
 #' Title
 #'
-#' @param data_ts  # Dataset of time series (species in row, year in column, first column with species name)
-#' @param data_ts_se
-#' @param nfac
-#' @param mintrend
-#' @param maxtrend
-#' @param AIC
-#' @param species_sub
-#' @param nboot
-#' @param silent
-#' @param control
-#' @param se_log
-#' @param is_mean_centred
-#' @param min_year_sc
+#' @param data_ts  A `data.table`. Dataset of species time series. It should be provided as a data.table with species time-series in row, the first column for species names' codes and years as column names.
+#' @param data_ts_se A `data.table`. Dataset of uncertainty (e.g. standard error) of species time series. It should be provided as a data.table with log species uncertainty time-series in row, the first column for species names' codes and years as column names.
+#' @param nfac A `integer`. Number of trends for the DFA. Default is 0 to test several values (between `mintrend` and `maxtrend`).
+#' @param mintrend An `integer`. Minimum number of trends to test. Default is 1.
+#' @param maxtrend An `integer`. Minimum number of trends to test. Default is 1.
+#' @param AIC A `logical` value. `TRUE` computes and displays the AIC, `FALSE` does not. Default is `TRUE`.
+#' @param species_sub A `data.frame` of species names. It should be provided with species in row, the first column for complete species names and the second column for species names' codes.
+#' @param nboot An `integer`. Number of bootstrap iteration. Default is 500.
+#' @param silent A `logical` value. `TRUE` silences `MakeADFun()`, `FALSE` does not. Default is `TRUE`.
+#' @param control A `list`. Control option for `MakeADFun()`. Default is list().
+#' @param se_log A `logical` value. `TRUE` if `data_ts_se` is provided with log values. `FALSE` if it is provided with not log values. Default is `TRUE`.
+#' @param is_mean_centred A `logical` value. `TRUE` if `data_ts` is provided with mean-centred values. `FALSE` if it is provided with non mean-centred values. Default is `TRUE`.
+#' @param min_year_sc An `integer`. First year of the period to select for rescaling if `is_mean_centred` = `FALSE`.
 #'
-#' @return
+#' @return A list of 17 objects: `data_to_plot_sp` data on species time-series and fit, `data_to_plot_tr` data on latent trends, `data_loadings` data on factor loadings, `exp_var_lt` data on % of variance of species ts explained by latent trends, `plot_sp` plot of species time-series and fit, `plot_tr` plot of latent trends, `plot_ld` plot of factor loadings, `plot_perc_var` plot of % of variance of species ts explained by latent trends, `plot_sp_group` plot clusters in factorial plan, `plot_group_ts` plot clustertime-series, `plot_group_ts2` plot clustertime-series from sdRep, `aic` best AIC, `sdRep` optimisation output, `group_dfa` cluster results, `trend_group` cluster centre times-series, `trend_group2` cluster centre times-series from sdRep, `data_msi` data for multi-species index
 #' @export
 #'
 #' @examples
 make_dfa <- function(data_ts,
-                     data_ts_se, # Dataset of log observation error of time series, same dimensions as data_ts
-                     nfac = 0, # Number of trends for the DFA, 0 to estimate the best number of trends
-                     mintrend = 1, # Minimum number of trends to test
-                     maxtrend = 5, # Maximum number of trends to test
-                     AIC = TRUE, # Display AIC
-                     species_sub,  # Species names
-                     nboot = 500, # Number of bootstrap for clustering
-                     silent = TRUE, # Silence optimisation
-                     control = list(), # Specify changes for DFA control options
-                     se_log = TRUE, # TRUE if error is for log values, FALSE otherwise
-                     is_mean_centred = TRUE, # TRUE if data are already mean-centred, FALSE otherwise
-                     min_year_sc = NULL # first year for rescaling if is_mean_centred = FALSE
+                     data_ts_se,
+                     nfac = 0,
+                     mintrend = 1,
+                     maxtrend = 5,
+                     AIC = TRUE,
+                     species_sub,
+                     nboot = 500,
+                     silent = TRUE,
+                     control = list(),
+                     se_log = TRUE,
+                     is_mean_centred = TRUE,
+                     min_year_sc = NULL
 )
 {
-  #data_ts=y_farm;data_ts_se=obs_se_farm;nfac=3;mintrend=1;maxtrend=5;AIC=TRUE;species_sub=species_farm;nboot=500;silent = TRUE;control = list();se_log = TRUE;is_mean_centred = TRUE
 
   # Save first and last years for plot and first year + 1 for scaling
 

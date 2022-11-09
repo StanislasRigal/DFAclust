@@ -1,19 +1,19 @@
 #' Plot groups and clustering trends
 #'
-#' @param nb_group Number of clusters
-#' @param centroids Position of cluster barycentres
-#' @param kmeans_res Results of clustering
-#' @param sdrep Optimisation output from DFA
-#' @param nT Number of time step
-#' @param min_year Oldest year in time-series
-#' @param stability_cluster_final Stability of clusters
-#' @param mean_dist_clust Average distance between species and barycentre
-#' @param pca_centre Coordinates to plot trends of PCA axes
-#' @param Z_hat Factor loadings
-#' @param x_hat Latent trends
+#' @param nb_group An `integer`. Number of clusters.
+#' @param centroids A `data.frame`. Position of cluster centres.
+#' @param kmeans_res A `data.frame`. Results of clustering.
+#' @param sdrep A `sdrep` object. Optimisation output from DFA.
+#' @param nT An `integer`. Number of time step.
+#' @param min_year An `integer`. Oldest year in time-series.
+#' @param stability_cluster_final Stability of clusters.
+#' @param mean_dist_clust Average distance between species and centre.
+#' @param pca_centre A `list`. Coordinates to plot trends of PCA axes.
+#' @param Z_hat A `data.frame`. Factor loadings.
+#' @param x_hat A `data.frame`. Latent trends.
 #' @param data_ts A `data.table`. Dataset of species time series. It should be provided as a data.table with species time-series in row, the first column for species names' codes and years as column names.
 #' @param data_ts_se A `data.table`. Dataset of uncertainty (e.g. standard error) of species time series. It should be provided as a data.table with species uncertainty time-series in row, the first column for species names' codes and years as column names.
-#' @param data_to_plot_sp Data for species time-series plot
+#' @param data_to_plot_sp A `data.frame`. Data for species time-series plot.
 #'
 #' @return A `list` of six objects: `final_plot_list` the plot of species clusters, `graph` the plot of time-series of cluster centres, `data_trend_group` the `data.frame` of time-series of cluster centres, `graph2` the plot of time-series of cluster centres from sdRep, `data_trend_group2` the `data.frame` of time-series of cluster centres from sdRep, `data_msi` the `data.frame` for multi-species index
 #' @export

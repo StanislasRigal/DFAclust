@@ -1,9 +1,9 @@
 #' Log mean-centred species indices and uncertainty
 #'
-#' @param index A numeric vector containing indices of a species across years.
-#' @param se A numeric vector containing uncertainty that comes with indices of a species across years.
-#' @param ref A logical vector containing the years to be used at reference for the scaling (TRUE) and the years not used in the reference (FALSE).
-#' @param denom A numeric value inferior to 1 and superior to 0 to calculate the variance of the first year.
+#' @param index A `numeric` vector containing indices of a species across years.
+#' @param se A `numeric` vector containing uncertainty that comes with indices of a species across years.
+#' @param ref A `logical` vector containing the years to be used at reference for the scaling (TRUE) and the years not used in the reference (FALSE).
+#' @param denom A `numeric` value inferior to 1 and superior to 0 to calculate the variance of the first year.
 #'
 #' @return A matrix/array with log mean-centred indices and uncertainty
 #' @export

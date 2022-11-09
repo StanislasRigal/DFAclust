@@ -2,9 +2,9 @@
 #'
 #' @param data_ts A `data.table`. Dataset of species time series. It should be provided as a data.table with species time-series in row, the first column for species names' codes and years as column names.
 #' @param data_ts_se A `data.table`. Dataset of uncertainty (e.g. standard error) of species time series. It should be provided as a data.table with species uncertainty time-series in row, the first column for species names' codes and years as column names.
-#' @param nfac A `integer`. Number of trends for the DFA.
-#' @param AIC A `logical` value. TRUE computes and displays the AIC, FALSE does not. Default is TRUE.
-#' @param silent A `logical` value. TRUE silences `MakeADFun()`, FALSE does not. Default is TRUE.
+#' @param nfac An `integer`. Number of trends for the DFA.
+#' @param AIC A `logical` value. `TRUE` computes and displays the AIC, `FALSE` does not. Default is TRUE.
+#' @param silent A `logical` value. `TRUE` silences `MakeADFun()`, `FALSE` does not. Default is TRUE.
 #' @param control A `list`. Control option for `MakeADFun()`. Default is list().
 #'
 #' @return A `list` of 13 objects: `tmbObj` the output of `MakeADFun()`, `tmbOpt` the optimisation from `tmbObj`, `data_ts` the processed dataset of species time series, `data_ts_se` the processed dataset of time series uncertainty, `data_ts_save` the input dataset of species time series, `data_ts_save_long` the input dataset of species time series in long format, `data_ts_se_save` the input dataset of species uncertainty time series, `ny` the number of time series, `nT` the number of time steps, `aic` the value of the AIC, `conv` the result of the convergence check, `sdRep_test` the summary of the TMB optimisation output, `sdRep_test_all` the complete TMB optimisation output
