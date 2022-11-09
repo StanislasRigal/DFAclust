@@ -11,6 +11,9 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' core_dfa(data_ts=data_ts, data_ts_se=data_ts_se, nfac=i, silent = silent, control = control)
+#' }
 core_dfa <- function(data_ts,
                      data_ts_se,
                      nfac,

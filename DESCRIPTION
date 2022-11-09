@@ -15,5 +15,18 @@ Config/testthat/edition: 3
 Depends: TMB, RcppEigen
 LinkingTo: TMB, RcppEigen
 Imports: 
-    RcppEigen,
-    TMB
+    dplyr,
+    forcats,
+    ggplot2,
+    ggrepel,
+    lcmix,
+    maditr,
+    mvtnorm,
+    NbClust,
+    plyr,
+    ppcor,
+    reshape2,
+    scales,
+    see,
+    stringr,
+    vegan
