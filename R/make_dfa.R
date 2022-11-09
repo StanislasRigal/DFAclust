@@ -1,4 +1,24 @@
-make_dfa <- function(data_ts, # Dataset of time series (species in row, year in column, first column with species name)
+#' Title
+#'
+#' @param data_ts  # Dataset of time series (species in row, year in column, first column with species name)
+#' @param data_ts_se
+#' @param nfac
+#' @param mintrend
+#' @param maxtrend
+#' @param AIC
+#' @param species_sub
+#' @param nboot
+#' @param silent
+#' @param control
+#' @param se_log
+#' @param is_mean_centred
+#' @param min_year_sc
+#'
+#' @return
+#' @export
+#'
+#' @examples
+make_dfa <- function(data_ts,
                      data_ts_se, # Dataset of log observation error of time series, same dimensions as data_ts
                      nfac = 0, # Number of trends for the DFA, 0 to estimate the best number of trends
                      mintrend = 1, # Minimum number of trends to test
