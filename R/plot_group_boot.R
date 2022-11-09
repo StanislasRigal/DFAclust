@@ -20,6 +20,7 @@
 #'
 #' @examples
 #' \dontrun{
+#' group_dfa <- group_from_dfa_boot1(data_loadings, cov_mat_Z, species_sub, nboot=nboot, ny, nfac)
 #' plot_group_boot(nb_group = nrow(group_dfa[[1]][[2]]), centroids = group_dfa[[2]], kmeans_res = group_dfa[[1]], sdrep = sdRep, nT = nT, min_year = min_year, stability_cluster_final = group_dfa[[3]], mean_dist_clust = group_dfa[[4]], pca_centre = group_dfa[[5]],Z_hat = Z_hat,x_hat = x_hat,data_ts = data_ts,data_ts_se = data_ts_se,data_to_plot_sp = data_to_plot_sp)
 #' }
 plot_group_boot <- function(nb_group,
