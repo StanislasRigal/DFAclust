@@ -1,3 +1,19 @@
+#' Log mean-centred species indices and uncertainty
+#'
+#' @param index A numeric vector containing indices of a species across years.
+#' @param se A numeric vector containing uncertainty that comes with indices of a species across years.
+#' @param ref A logical vector containing the years to be used at reference for the scaling (TRUE) and the years not used in the reference (FALSE).
+#' @param denom A numeric value inferior to 1 and superior to 0 to calculate the variance of the first year.
+#'
+#' @return A matrix/array with log mean-centred indices and uncertainty
+#' @export
+#'
+#' @examples
+#' set.seed(123)
+#' index <- c(100,round(runif(19, min = 50, max = 150)))
+#' se <- c(0,round(runif(19, min = 5, max = 15)))
+#' ref <- c(rep(FALSE,5),rep(TRUE,15))
+#' rescale_index(index, se, ref, denom = 1.01)
 rescale_index <- function(index, se, ref, denom = 1.01) {
   missing <- is.na(index)
   log_index <- log(index[!missing])
