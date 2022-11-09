@@ -14,7 +14,7 @@ group_from_dfa_boot1(
 )
 }
 \arguments{
-\item{data_loadings}{A\code{data.frame} of species initial factor loadings.}
+\item{data_loadings}{A \code{data.frame} of species initial factor loadings.}
 
 \item{cov_mat_Z}{A \code{matrix} corresponding to the covariance matrix of species factor loadings.}
 
@@ -27,7 +27,7 @@ group_from_dfa_boot1(
 \item{nfac}{An \code{integer}. Number of latent trends.}
 }
 \value{
-A list of five objects: \code{kmeans_res} a data.frame containing the results of clustering, \code{centroids} a data.frame with the coordinates of cluster centres, \code{stability_cluster_final} a vector of stability for each cluster, \code{mean_dist_clust} a vector of the mean distance between species and centre for each cluster, \code{pca_centre_list} a list containing coordinates to plot trends of PCA axes.
+A \code{list} of five objects: \code{kmeans_res} a data.frame containing the results of clustering, \code{centroids} a data.frame with the coordinates of cluster centres, \code{stability_cluster_final} a vector of stability for each cluster, \code{mean_dist_clust} a vector of the mean distance between species and centre for each cluster, \code{pca_centre_list} a list containing coordinates to plot trends of PCA axes.
 }
 \description{
 Get cluster for DFA results

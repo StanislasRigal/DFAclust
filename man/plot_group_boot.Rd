@@ -44,10 +44,20 @@ plot_group_boot(
 
 \item{x_hat}{Latent trends}
 
-\item{data_ts}{A data.table. Dataset of species time series. It should be provided as a data.table with species time-series in row, the first column for species names' codes and years as column names.}
+\item{data_ts}{A \code{data.table}. Dataset of species time series. It should be provided as a data.table with species time-series in row, the first column for species names' codes and years as column names.}
 
-\item{data_to_plot_sp}{}
+\item{data_ts_se}{A \code{data.table}. Dataset of uncertainty (e.g. standard error) of species time series. It should be provided as a data.table with species uncertainty time-series in row, the first column for species names' codes and years as column names.}
+
+\item{data_to_plot_sp}{Data for species time-series plot}
+}
+\value{
+A \code{list} of six objects: \code{final_plot_list} the plot of species clusters, \code{graph} the plot of time-series of cluster centres, \code{data_trend_group} the \code{data.frame} of time-series of cluster centres, \code{graph2} the plot of time-series of cluster centres from sdRep, \code{data_trend_group2} the \code{data.frame} of time-series of cluster centres from sdRep, \code{data_msi} the \code{data.frame} for multi-species index
 }
 \description{
 Plot groups and clustering trends
+}
+\examples{
+\dontrun{
+plot_group_boot(nb_group = nrow(group_dfa[[1]][[2]]), centroids = group_dfa[[2]], kmeans_res = group_dfa[[1]], sdrep = sdRep, nT = nT, min_year = min_year, stability_cluster_final = group_dfa[[3]], mean_dist_clust = group_dfa[[4]], pca_centre = group_dfa[[5]],Z_hat = Z_hat,x_hat = x_hat,data_ts = data_ts,data_ts_se = data_ts_se,data_to_plot_sp = data_to_plot_sp)
+}
 }

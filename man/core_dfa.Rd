@@ -14,20 +14,20 @@ core_dfa(
 )
 }
 \arguments{
-\item{data_ts}{A data.table. Dataset of species time series. It should be provided as a data.table with species time-series in row, the first column for species names' codes and years as column names.}
+\item{data_ts}{A \code{data.table}. Dataset of species time series. It should be provided as a data.table with species time-series in row, the first column for species names' codes and years as column names.}
 
-\item{data_ts_se}{A data.table. Dataset of uncertainty (e.g. standard error) of species time series. It should be provided as a data.table with species uncertainty time-series in row, the first column for species names' codes and years as column names.}
+\item{data_ts_se}{A \code{data.table}. Dataset of uncertainty (e.g. standard error) of species time series. It should be provided as a data.table with species uncertainty time-series in row, the first column for species names' codes and years as column names.}
 
-\item{nfac}{A integer. Number of trends for the DFA.}
+\item{nfac}{A \code{integer}. Number of trends for the DFA.}
 
-\item{AIC}{A logical value. TRUE computes and displays the AIC, FALSE does not. Default is TRUE.}
+\item{AIC}{A \code{logical} value. TRUE computes and displays the AIC, FALSE does not. Default is TRUE.}
 
-\item{silent}{A logical value. TRUE silences \code{MakeADFun()}, FALSE does not. Default is TRUE.}
+\item{silent}{A \code{logical} value. TRUE silences \code{MakeADFun()}, FALSE does not. Default is TRUE.}
 
-\item{control}{A list. Control option for \code{MakeADFun()}. Default is list().}
+\item{control}{A \code{list}. Control option for \code{MakeADFun()}. Default is list().}
 }
 \value{
-A list of 13 objects: \code{tmbObj} the output of \code{MakeADFun()}, \code{tmbOpt} the optimisation from \code{tmbObj}, \code{data_ts} the processed dataset of species time series, \code{data_ts_se} the processed dataset of time series uncertainty, \code{data_ts_save} the input dataset of species time series, \code{data_ts_save_long} the input dataset of species time series in long format, \code{data_ts_se_save} the input dataset of species uncertainty time series, \code{ny} the number of time series, \code{nT} the number of time steps, \code{aic} the value of the AIC, \code{conv} the result of the convergence check, \code{sdRep_test} the summary of the TMB optimisation output, \code{sdRep_test_all} the complete TMB optimisation output
+A \code{list} of 13 objects: \code{tmbObj} the output of \code{MakeADFun()}, \code{tmbOpt} the optimisation from \code{tmbObj}, \code{data_ts} the processed dataset of species time series, \code{data_ts_se} the processed dataset of time series uncertainty, \code{data_ts_save} the input dataset of species time series, \code{data_ts_save_long} the input dataset of species time series in long format, \code{data_ts_se_save} the input dataset of species uncertainty time series, \code{ny} the number of time series, \code{nT} the number of time steps, \code{aic} the value of the AIC, \code{conv} the result of the convergence check, \code{sdRep_test} the summary of the TMB optimisation output, \code{sdRep_test_all} the complete TMB optimisation output
 }
 \description{
 Core function running the DFA and compute the AIC for a given number of latent trends
