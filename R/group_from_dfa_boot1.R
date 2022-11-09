@@ -1,13 +1,13 @@
 #' Get cluster for DFA results
 #'
-#' @param data_loadings A`data.frame` of species initial factor loadings.
+#' @param data_loadings A `data.frame` of species initial factor loadings.
 #' @param cov_mat_Z A `matrix` corresponding to the covariance matrix of species factor loadings.
 #' @param species_sub A `data.frame` of species names. It should be provided with species in row, the first column for complete species names and the second column for species names' codes.
 #' @param nboot An `integer`. Number of bootstrap iteration. Default is 100.
 #' @param ny An `integer`. Number of time series.
 #' @param nfac An `integer`. Number of latent trends.
 #'
-#' @return A list of five objects: `kmeans_res` a data.frame containing the results of clustering, `centroids` a data.frame with the coordinates of cluster centres, `stability_cluster_final` a vector of stability for each cluster, `mean_dist_clust` a vector of the mean distance between species and centre for each cluster, `pca_centre_list` a list containing coordinates to plot trends of PCA axes.
+#' @return A `list` of five objects: `kmeans_res` a data.frame containing the results of clustering, `centroids` a data.frame with the coordinates of cluster centres, `stability_cluster_final` a vector of stability for each cluster, `mean_dist_clust` a vector of the mean distance between species and centre for each cluster, `pca_centre_list` a list containing coordinates to plot trends of PCA axes.
 #' @export
 #'
 #' @examples
