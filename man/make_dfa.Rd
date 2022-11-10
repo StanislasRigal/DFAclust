@@ -54,14 +54,13 @@ A list of 17 objects: \code{data_to_plot_sp} data on species time-series and fit
 Title
 }
 \examples{
-\dontrun{
 data(species_ts)
 data(species_uncert_ts)
 data(species_name)
-dfa_aus_farm <- make_dfa(data_ts = y_farm,data_ts_se = obs_se_farm,
-species_sub = species_aus_farm,nfac = 0,
+species_ts[species_ts==0] <- NA
+dfa_aus_farm <- make_dfa(data_ts = species_ts,data_ts_se = species_uncert_ts,
+species_sub = species_name,nfac = 0,
 mintrend = 1,maxtrend = 5,AIC = TRUE,
 nboot = 10,silent = TRUE,control = list(),
 se_log = FALSE,is_mean_centred = FALSE, min_year_sc=2000)
-}
 }

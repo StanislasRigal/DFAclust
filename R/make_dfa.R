@@ -16,18 +16,19 @@
 #'
 #' @return A list of 17 objects: `data_to_plot_sp` data on species time-series and fit, `data_to_plot_tr` data on latent trends, `data_loadings` data on factor loadings, `exp_var_lt` data on % of variance of species ts explained by latent trends, `plot_sp` plot of species time-series and fit, `plot_tr` plot of latent trends, `plot_ld` plot of factor loadings, `plot_perc_var` plot of % of variance of species ts explained by latent trends, `plot_sp_group` plot clusters in factorial plan, `plot_group_ts` plot clustertime-series, `plot_group_ts2` plot clustertime-series from sdRep, `aic` best AIC, `sdRep` optimisation output, `group_dfa` cluster results, `trend_group` cluster centre times-series, `trend_group2` cluster centre times-series from sdRep, `data_msi` data for multi-species index
 #' @export
+#' @importFrom graphics pie
+#' @importFrom stats complete.cases dist kmeans lm na.omit nlminb optim prcomp rnorm runif sd setNames varimax weighted.mean
 #'
 #' @examples
-#' \dontrun{
 #' data(species_ts)
 #' data(species_uncert_ts)
 #' data(species_name)
-#' dfa_aus_farm <- make_dfa(data_ts = y_farm,data_ts_se = obs_se_farm,
-#'species_sub = species_aus_farm,nfac = 0,
+#' species_ts[species_ts==0] <- NA
+#' dfa_aus_farm <- make_dfa(data_ts = species_ts,data_ts_se = species_uncert_ts,
+#'species_sub = species_name,nfac = 0,
 #'mintrend = 1,maxtrend = 5,AIC = TRUE,
 #'nboot = 10,silent = TRUE,control = list(),
 #'se_log = FALSE,is_mean_centred = FALSE, min_year_sc=2000)
-#'}
 make_dfa <- function(data_ts,
                      data_ts_se,
                      nfac = 0,
@@ -60,14 +61,14 @@ make_dfa <- function(data_ts,
       warning("Only NAs in data_ts_se, standard errors set to 0.")
       data_ts_se <- as.data.frame(data_ts_se)
       data_ts_se[,-1] <- 0
-      data_ts_se <- as.data.table(data_ts_se)
+      data_ts_se <- data.table::as.data.table(data_ts_se)
     }
     if(sum(complete.cases(as.data.frame(t(data_ts_se))))>1){
       warning("NAs in data_ts_se, missing values replaced by mean of standard errors.")
       data_ts_se <- as.data.frame(data_ts_se)
       na_coord <- which(is.na(data_ts_se),arr.ind = T)
       data_ts_se[na_coord] <- apply(data_ts_se[na_coord[,1],-1], 1, function(x){return(mean(x, na.rm=T))})
-      data_ts_se <- as.data.table(data_ts_se)
+      data_ts_se <- data.table::as.data.table(data_ts_se)
     }
   }
   if(se_log == FALSE & is_mean_centred == TRUE){
@@ -75,7 +76,7 @@ make_dfa <- function(data_ts,
     for(i in 1:nrow(data_ts_se)){
       data_ts_se[i,-1] <- 1/as.numeric(data_ts[i,-1])*as.numeric(data_ts_se[1,-1])
     }
-    data_ts_se <- as.data.table(data_ts_se)
+    data_ts_se <- data.table::as.data.table(data_ts_se)
     data_ts_se[is.na(data_ts_se)] <- 0
   }
 
@@ -86,7 +87,7 @@ make_dfa <- function(data_ts,
     data_ts <- as.data.frame(data_ts)
     zero_index <- which(data_ts==0, arr.ind = T)
     data_ts[,-1] <- t(apply(data_ts[,-1], 1, function(x){if(length(which(x==0))>0){x[which(x==0)] <- mean(x,na.rm=T)/100}; return(x)}))
-    data_ts <- as.data.table(data_ts)
+    data_ts <- data.table::as.data.table(data_ts)
 
     data_ts_se <- as.data.frame(data_ts_se)
     if(anyNA(data_ts_se[zero_index[,1],zero_index[,2]])){
@@ -94,7 +95,7 @@ make_dfa <- function(data_ts,
         data_ts_se[zero_index[i,1],zero_index[i,2]] <- 0
       }
     }
-    data_ts_se <- as.data.table(data_ts_se)
+    data_ts_se <- data.table::as.data.table(data_ts_se)
   }
 
   # Mean-centre values if they are not
@@ -104,12 +105,12 @@ make_dfa <- function(data_ts,
     data_ts_prov <- as.matrix(data_ts[,-1])
     data_ts_se_prov <- as.matrix(data_ts_se[,-1])
     for(i in 1:nrow(data_ts)){
-      rescale_value <- rescale_index(data_ts_prov[i,],data_ts_se_prov[i,],min_year:max_year %in% min_year_sc:max_year)
+      rescale_value <- rescale_index(index = data_ts_prov[i,], se = data_ts_se_prov[i,], ref = min_year:max_year %in% min_year_sc:max_year)
       data_ts_prov[i,] <- exp(rescale_value[1,])
       data_ts_se_prov[i,] <- rescale_value[2,]
     }
-    data_ts_prov <- data.table(data_ts[,1],data_ts_prov[,attr(data_ts_prov,"dimnames")[[2]] %in% min_year_sc:max_year])
-    data_ts_se_prov <- data.table(data_ts_se[,1],data_ts_se_prov[,attr(data_ts_se_prov,"dimnames")[[2]] %in% min_year_sc:max_year])
+    data_ts_prov <- data.table::data.table(data_ts[,1],data_ts_prov[,attr(data_ts_prov,"dimnames")[[2]] %in% min_year_sc:max_year])
+    data_ts_se_prov <- data.table::data.table(data_ts_se[,1],data_ts_se_prov[,attr(data_ts_se_prov,"dimnames")[[2]] %in% min_year_sc:max_year])
 
     data_ts <- data_ts_prov
     data_ts_se <- data_ts_se_prov
@@ -195,7 +196,7 @@ make_dfa <- function(data_ts,
 
   # Initial data for species loadings
 
-  data_loadings <- melt(data.frame(code_sp=data_ts_save[,1],Z_hat_orig),
+  data_loadings <- reshape2::melt(data.frame(code_sp=data_ts_save[,1],Z_hat_orig),
                         id.vars="code_sp")
 
   # Run group_from_dfa_boot to obtain species clusters
@@ -256,10 +257,10 @@ make_dfa <- function(data_ts,
   # Data for species time-series plot
 
   data_to_plot_sp <- cbind(data_ts_save_long,
-                           melt(data_ts_save, id.vars=names(data_ts_save)[1])[,3],
-                           se=melt(data_ts_se_save, id.vars=names(data_ts_se_save)[1])[,3],
-                           pred=melt(sp_ts, id.vars=names(data_ts_se_save)[1])[,3],
-                           pred_se=melt(sp_se_ts, id.vars=names(data_ts_se_save)[1])[,3])
+                           reshape2::melt(data_ts_save, id.vars=names(data_ts_save)[1])[,3],
+                           se=reshape2::melt(data_ts_se_save, id.vars=names(data_ts_se_save)[1])[,3],
+                           pred=reshape2::melt(sp_ts, id.vars=names(data_ts_se_save)[1])[,3],
+                           pred_se=reshape2::melt(sp_se_ts, id.vars=names(data_ts_se_save)[1])[,3])
 
   data_to_plot_sp <- merge(data_to_plot_sp, species_sub[,c("name_long","code_sp")],by="code_sp")
   data_to_plot_sp$pred.value_exp <- exp(data_to_plot_sp$pred.value)
@@ -289,15 +290,15 @@ make_dfa <- function(data_ts,
 
     data_to_plot_tr_rot <- data.frame(t(solve(varimax(Z_hat)$rotmat) %*% x_hat), Year=min(data_to_plot_sp$Year):max(data_to_plot_sp$Year))
 
-    data_to_plot_tr <- cbind(melt(data_to_plot_tr, id.vars = "Year"),
-                             se=melt(data_to_plot_tr_se, id.vars = "Year")[,3], # This SE is ok as it comes directly from TMB
-                             rot_tr=melt(data_to_plot_tr_rot, id.vars = "Year")[,3])
+    data_to_plot_tr <- cbind(reshape2::melt(data_to_plot_tr, id.vars = "Year"),
+                             se=reshape2::melt(data_to_plot_tr_se, id.vars = "Year")[,3], # This SE is ok as it comes directly from TMB
+                             rot_tr=reshape2::melt(data_to_plot_tr_rot, id.vars = "Year")[,3])
 
     data_to_plot_tr$variable <- as.character(data_to_plot_tr$variable) %>% gsub(pattern="X", replacement = "Latent trend ") %>% as.factor()
 
     # Data for species loadings
 
-    data_loadings <- cbind(melt(data.frame(code_sp=data_ts_save[,1],
+    data_loadings <- cbind(reshape2::melt(data.frame(code_sp=data_ts_save[,1],
                                            Z_hat %*% varimax(Z_hat)$rotmat), id.vars="code_sp"),
                            se.value = NA)
 
@@ -317,7 +318,7 @@ make_dfa <- function(data_ts,
     exp_var_lt$all <- apply(exp_var_lt[,-1],1,function(x){return(sum(abs(x)))})
     exp_var_lt[,2:(ncol(exp_var_lt)-1)] <- exp_var_lt[,2:(ncol(exp_var_lt)-1)]/exp_var_lt$all
     exp_var_lt$name_long <- fct_reorder(exp_var_lt$name_long,exp_var_lt$eta)
-    exp_var_lt_long <- melt(exp_var_lt[,1:(ncol(exp_var_lt)-1)])
+    exp_var_lt_long <- reshape2::melt(exp_var_lt[,1:(ncol(exp_var_lt)-1)])
 
 
     # Plots
@@ -352,12 +353,12 @@ make_dfa <- function(data_ts,
 
   }else{
 
-    data_to_plot_tr <- cbind(melt(data_to_plot_tr, id.vars = "Year"),
-                             se=melt(data_to_plot_tr_se, id.vars = "Year")[,3])
+    data_to_plot_tr <- cbind(reshape2::melt(data_to_plot_tr, id.vars = "Year"),
+                             se=reshape2::melt(data_to_plot_tr_se, id.vars = "Year")[,3])
 
     # Data for species loadings
 
-    data_loadings <- cbind(melt(data.frame(code_sp=data_ts_save[,1],
+    data_loadings <- cbind(reshape2::melt(data.frame(code_sp=data_ts_save[,1],
                                            sdRep[rownames(sdRep)=="Z",1]), id.vars="code_sp"),
                            se.value = NA)
 
@@ -374,7 +375,7 @@ make_dfa <- function(data_ts,
     exp_var_lt$all <- apply(exp_var_lt[,-1],1,function(x){return(sum(abs(x)))})
     exp_var_lt[,2:(ncol(exp_var_lt)-1)] <- exp_var_lt[,2:(ncol(exp_var_lt)-1)]/exp_var_lt$all
     exp_var_lt$name_long <- fct_reorder(exp_var_lt$name_long,exp_var_lt$eta)
-    exp_var_lt_long <- melt(exp_var_lt[,1:(ncol(exp_var_lt)-1)])
+    exp_var_lt_long <- reshape2::melt(exp_var_lt[,1:(ncol(exp_var_lt)-1)])
 
 
     # Plots
