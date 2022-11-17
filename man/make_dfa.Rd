@@ -54,6 +54,7 @@ A list of 17 objects: \code{data_to_plot_sp} data on species time-series and fit
 Title
 }
 \examples{
+\dontrun{
 data(species_ts)
 data(species_uncert_ts)
 data(species_name)
@@ -63,4 +64,5 @@ species_sub = species_name,nfac = 0,
 mintrend = 1,maxtrend = 5,AIC = TRUE,
 nboot = 10,silent = TRUE,control = list(),
 se_log = FALSE,is_mean_centred = FALSE, min_year_sc=2000)
+}
 }

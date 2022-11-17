@@ -20,6 +20,7 @@
 #' @importFrom stats complete.cases dist kmeans lm na.omit nlminb optim prcomp rnorm runif sd setNames varimax weighted.mean
 #'
 #' @examples
+#' \dontrun{
 #' data(species_ts)
 #' data(species_uncert_ts)
 #' data(species_name)
@@ -29,6 +30,7 @@
 #'mintrend = 1,maxtrend = 5,AIC = TRUE,
 #'nboot = 10,silent = TRUE,control = list(),
 #'se_log = FALSE,is_mean_centred = FALSE, min_year_sc=2000)
+#'}
 make_dfa <- function(data_ts,
                      data_ts_se,
                      nfac = 0,

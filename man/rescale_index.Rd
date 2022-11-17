@@ -13,7 +13,7 @@ rescale_index(index, se, ref, denom = 1.01)
 
 \item{ref}{A \code{logical} vector containing the years to be used at reference for the scaling (TRUE) and the years not used in the reference (FALSE).}
 
-\item{denom}{A \code{numeric} value inferior to 1 and superior to 0 to calculate the variance of the first year.}
+\item{denom}{A \code{numeric} value inferior to 1 and superior to 0 to calculate the variance of the first year. Default to 1.01 is conservative, consider using 2 for a less conservative approach.}
 }
 \value{
 A matrix/array with log mean-centred indices and uncertainty

@@ -84,7 +84,7 @@ group_from_dfa_boot1 <- function(data_loadings,
 
     # Draw factor loadings using covariance matrix
     set.seed(i)
-    rand_load <- mvtnorm::rmvnorm(1, mean=data_loadings[!row_col_0,]$value, sigma=cov_mat_Z)
+    rand_load <- mvtnorm::rmvnorm(1, mean=data_loadings$value[-row_col_0], sigma=cov_mat_Z)
 
     # Complete loading vector with fixed values
     for(j in 1:(nfac-1)){

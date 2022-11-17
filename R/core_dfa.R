@@ -54,6 +54,7 @@ core_dfa <- function(data_ts,
 
   dataTmb <- list(y = log(as.matrix(data_ts)),
                   obs_se = as.matrix(data_ts_se),
+                  center = 1,
                   Z_pred = Z_predinit,
                   W = W_init)
 
