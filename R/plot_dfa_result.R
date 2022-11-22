@@ -1,4 +1,69 @@
-plot_dfa_result <- function(testInheritedMethods
+#' Plot DFAclust results
+#'
+#' @param data_ts_save A `data.frame`. Input species time series.
+#' @param data_ts_se_save A `data.frame`. Input uncertainty of species time series.
+#' @param data_ts A `matrix`. The processed `matrix` of species time series.
+#' @param data_ts_se A `matrix`. The processed `matrix` of uncertainty of species time series.
+#' @param sdRep A `TMB` object. Summary of the TMB optimisation output.
+#' @param ny An `integer`. Number of time series.
+#' @param species_sub A `data.frame` of species names. It should be provided with species in row, the first column for complete species names and the second column for species names' codes.
+#' @param x_hat A `matrix`. Estimated latent trends.
+#' @param x_hat_se A `matrix`. Standard error of estimated latent trends.
+#' @param Z_hat A `matrix`. Estimated factor loadings.
+#' @param nfac An `integer`. Number of latent trends.
+#' @param group_dfa A `list`. Clustering output.
+#' @param nT An `integer`. Number of time steps.
+#' @param min_year An `integer`. First year of time-series.
+#'
+#' @return A `list` of 13 objects: `data_to_plot_sp` data on species time-series and fit, `data_to_plot_tr` Data on latent trends, `data_loadings` Data on factor loadings, `exp_var_lt` Data on % of variance of species ts explained by latent trends, `plot_sp` Plot of species time-series and fit, `plot_tr` Plot of latent trends, `plot_ld` Plot of factor loadings, `plot_perc_var` Plot of % of variance of species ts explained by latent trends, `plot_sp_group` Plot clusters in factorial plan, `plot_group_ts` Plot clustertime-series, `plot_group_ts2` Plot clustertime-series from sdRep, `trend_group` Cluster barycentre times-series, `trend_group2` Cluster barycentre times-series from sdRep.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' data(species_ts_mat)
+#' data(species_uncert_ts_mat)
+#' species_ts_mat[species_ts_mat==0] <- NA
+#'
+#' data_ready_dfa <- data_check_prepare(data_ts = species_ts_mat,data_ts_se = species_uncert_ts_mat,
+#' se_log = FALSE,is_mean_centred = FALSE, min_year_sc=2000)
+#'
+#' dfa_result <- fun_make_dfa(data_ts = data_ready_dfa$data_ts,data_ts_se = data_ready_dfa$data_ts_se,
+#' min_year = data_ready_dfa$min_year, max_year = data_ready_dfa$max_year, species_name_ordre = data_ready_dfa$species_name_ordre,
+#' species_sub = species_name, nfac = 0, mintrend = 1, maxtrend = 5, AIC = TRUE,
+#' center_option = 1, silent = TRUE, control = list())
+#'
+#' data(species_name)
+#'
+#' cluster_result <- cluster_dfa(data_loadings = dfa_result$data_loadings,
+#' cov_mat_Z = dfa_result$cov_mat_Z, species_sub = species_name,
+#' nboot = 500, ny = dfa_result$ny, nfac = dfa_result$nfac,
+#' data_ts = dfa_result$data_ts)
+#'
+#' dfa_result_update <- update_dfa(tmbObj = dfa_result$tmbObj,
+#' Z_pred_from_kmeans = cluster_result$Z_pred_from_kmeans,
+#' W_from_kmeans = cluster_result$W_from_kmeans)
+#'
+#' dfa_result_plot = plot_dfa_result(data_ts_save = dfa_result$data_ts_save, data_ts_se_save = dfa_result$data_ts_se_save,
+#' data_ts = dfa_result=data_ts, data_ts_se = dfa_result$data_ts_se, sdRep = dfa_result_update$sdRep,
+#' ny = dfa_result$ny, species_sub = species_name, x_hat = dfa_result$x_hat, x_hat_se = dfa_result$x_hat_se,
+#' Z_hat = dfa_result$Z_hat, nfac = dfa_result$nfac, group_dfa = cluster_result$group_dfa,
+#' nT = dfa_result$nT, min_year = data_ready_dfa$min_year)
+#' }
+plot_dfa_result <- function(data_ts_save,
+                            data_ts_se_save,
+                            data_ts,
+                            data_ts_se,
+                            sdRep,
+                            ny,
+                            species_sub,
+                            x_hat,
+                            x_hat_se,
+                            Z_hat,
+                            nfac,
+                            group_dfa,
+                            nT,
+                            min_year
+
 ){
   # Prepare data to plot
 
@@ -49,7 +114,6 @@ plot_dfa_result <- function(testInheritedMethods
   data_to_plot_tr <- data.frame(t(x_hat), Year=min(data_to_plot_sp$Year):max(data_to_plot_sp$Year))
   data_to_plot_tr_se <- data.frame(t(x_hat_se), Year=min(data_to_plot_sp$Year):max(data_to_plot_sp$Year))
 
-
   if(nfac > 1){
 
     # Add rotated trends
@@ -65,7 +129,7 @@ plot_dfa_result <- function(testInheritedMethods
     # Data for species loadings
 
     data_loadings <- cbind(reshape2::melt(data.frame(code_sp=data_ts_save[,1],
-                                                     Z_hat %*% varimax(Z_hat)$rotmat), id.vars="code_sp"),
+                                           Z_hat %*% varimax(Z_hat)$rotmat), id.vars="code_sp"),
                            se.value = NA)
 
     data_loadings <- merge(data_loadings, species_sub[,c("name_long","code_sp")],by="code_sp")
@@ -125,7 +189,7 @@ plot_dfa_result <- function(testInheritedMethods
     # Data for species loadings
 
     data_loadings <- cbind(reshape2::melt(data.frame(code_sp=data_ts_save[,1],
-                                                     sdRep[rownames(sdRep)=="Z",1]), id.vars="code_sp"),
+                                           sdRep[rownames(sdRep)=="Z",1]), id.vars="code_sp"),
                            se.value = NA)
 
     data_loadings <- merge(data_loadings, species_sub[,c("name_long","code_sp")],by="code_sp")
@@ -169,7 +233,6 @@ plot_dfa_result <- function(testInheritedMethods
             axis.text.x = element_text(angle = 45, hjust = 1), axis.text.y = element_text(face="italic"))
 
   }
-
   if(is.list(group_dfa)){
     if(length(group_dfa[[3]])>1){
       plot_sp_group_all <- plot_group_boot(nb_group = nrow(group_dfa[[1]][[2]]),
@@ -184,13 +247,13 @@ plot_dfa_result <- function(testInheritedMethods
                                            x_hat = x_hat,
                                            data_ts = data_ts,
                                            data_ts_se = data_ts_se,
-                                           data_to_plot_sp = data_to_plot_sp)
-      plot_sp_group <- plot_sp_group_all[[1]]
-      plot_group_ts <- plot_sp_group_all[[2]]
-      trend_group <- plot_sp_group_all[[3]]
-      plot_group_ts2 <- plot_sp_group_all[[4]]
-      trend_group2 <- plot_sp_group_all[[5]]
-      data_msi <- plot_sp_group_all[[6]]
+                                           data_to_plot_sp = data_to_plot_sp,
+                                           species_name_ordre = species_name_ordre)
+      plot_sp_group <- plot_sp_group_all$final_plot_list
+      plot_group_ts <- plot_sp_group_all$graph
+      trend_group <- plot_sp_group_all$data_trend_group
+      plot_group_ts2 <- plot_sp_group_all$graph2
+      trend_group2 <- plot_sp_group_all$data_trend_group2
     }
     if(length(group_dfa[[3]])==1){
       plot_sp_group_all <- plot_group_boot(nb_group = 1,
@@ -205,13 +268,13 @@ plot_dfa_result <- function(testInheritedMethods
                                            x_hat = x_hat,
                                            data_ts = data_ts,
                                            data_ts_se = data_ts_se,
-                                           data_to_plot_sp = data_to_plot_sp)
-      plot_sp_group <- plot_sp_group_all[[1]]
-      plot_group_ts <- plot_sp_group_all[[2]]
-      trend_group <- plot_sp_group_all[[3]]
-      plot_group_ts2 <- plot_sp_group_all[[4]]
-      trend_group2 <- plot_sp_group_all[[5]]
-      data_msi <- plot_sp_group_all[[6]]
+                                           data_to_plot_sp = data_to_plot_sp,
+                                           species_name_ordre = species_name_ordre)
+      plot_sp_group <- plot_sp_group_all$final_plot_list
+      plot_group_ts <- plot_sp_group_all$graph
+      trend_group <- plot_sp_group_all$data_trend_group
+      plot_group_ts2 <- plot_sp_group_all$graph2
+      trend_group2 <- plot_sp_group_all$data_trend_group2
     }
   }
 
@@ -222,7 +285,6 @@ plot_dfa_result <- function(testInheritedMethods
     trend_group <- NA
     plot_group_ts2 <- NA
     trend_group2 <- NA
-    data_msi <- NA
   }
 
   return(list(data_to_plot_sp = data_to_plot_sp, # Data on species time-series and fit
@@ -240,7 +302,6 @@ plot_dfa_result <- function(testInheritedMethods
               sdRep = sdRep, # Optimisation output
               group = group_dfa, # Cluster results
               trend_group = trend_group, # Cluster barycentre times-series
-              trend_group2 = trend_group2, # Cluster barycentre times-series from sdRep
-              data_msi = data_msi # Data for multi-species index
+              trend_group2 = trend_group2 # Cluster barycentre times-series from sdRep
   ))
 }

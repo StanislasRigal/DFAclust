@@ -4,7 +4,7 @@
 #' @param data_ts_se A `matrix` of species of uncertainty (e.g. standard error) of species time series. It should be provided as a `matrix` with log species uncertainty time-series in row, species' codes as row names and years as column names.
 #' @param min_year An `integer`. First year of time-series.
 #' @param max_year An `integer`. Last year of time-series.
-#' @param species_name_ordre A `character vector`. Species code following the order of `data_ts`.
+#' @param species_name_ordre A `character vector`. Species code in the same order as in `data_ts`.
 #' @param species_sub A `data.frame` of species names. It should be provided with species in row, the first column for complete species names and the second column for species names' codes.
 #' @param nfac An `integer`. Number of trends for the DFA. Default is 0 to test several values (between `mintrend` and `maxtrend`).
 #' @param mintrend An `integer`. Minimum number of trends to test. Default is 1.

@@ -29,7 +29,7 @@ fun_make_dfa(
 
 \item{max_year}{An \code{integer}. Last year of time-series.}
 
-\item{species_name_ordre}{A \verb{character vector}. Species code following the order of \code{data_ts}.}
+\item{species_name_ordre}{A \verb{character vector}. Species code in the same order as in \code{data_ts}.}
 
 \item{species_sub}{A \code{data.frame} of species names. It should be provided with species in row, the first column for complete species names and the second column for species names' codes.}
 
