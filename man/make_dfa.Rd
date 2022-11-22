@@ -2,7 +2,7 @@
 % Please edit documentation in R/make_dfa.R
 \name{make_dfa}
 \alias{make_dfa}
-\title{Title}
+\title{Combine all functions}
 \usage{
 make_dfa(
   data_ts,
@@ -51,7 +51,7 @@ make_dfa(
 A list of 17 objects: \code{data_to_plot_sp} data on species time-series and fit, \code{data_to_plot_tr} data on latent trends, \code{data_loadings} data on factor loadings, \code{exp_var_lt} data on \% of variance of species ts explained by latent trends, \code{plot_sp} plot of species time-series and fit, \code{plot_tr} plot of latent trends, \code{plot_ld} plot of factor loadings, \code{plot_perc_var} plot of \% of variance of species ts explained by latent trends, \code{plot_sp_group} plot clusters in factorial plan, \code{plot_group_ts} plot clustertime-series, \code{plot_group_ts2} plot clustertime-series from sdRep, \code{aic} best AIC, \code{sdRep} optimisation output, \code{group_dfa} cluster results, \code{trend_group} cluster centre times-series, \code{trend_group2} cluster centre times-series from sdRep, \code{data_msi} data for multi-species index
 }
 \description{
-Title
+Combine all functions
 }
 \examples{
 \dontrun{

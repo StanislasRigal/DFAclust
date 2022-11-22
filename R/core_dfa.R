@@ -1,46 +1,43 @@
 #' Core function running the DFA and compute the AIC for a given number of latent trends
 #'
-#' @param data_ts A `data.table`. Dataset of species time series. It should be provided as a data.table with species time-series in row, the first column for species names' codes and years as column names.
-#' @param data_ts_se A `data.table`. Dataset of uncertainty (e.g. standard error) of species time series. It should be provided as a data.table with species uncertainty time-series in row, the first column for species names' codes and years as column names.
+#' @param data_ts A `matrix` of species time series. It should be provided as a `matrix` with species time-series in row, species' codes as row names and years as column names.
+#' @param data_ts_se A `matrix` of species of uncertainty (e.g. standard error) of species time series. It should be provided as a `matrix` with log species uncertainty time-series in row, species' codes as row names and years as column names.
 #' @param nfac An `integer`. Number of trends for the DFA.
 #' @param AIC A `logical` value. `TRUE` computes and displays the AIC, `FALSE` does not. Default is TRUE.
 #' @param silent A `logical` value. `TRUE` silences `MakeADFun()`, `FALSE` does not. Default is TRUE.
 #' @param control A `list`. Control option for `MakeADFun()`. Default is list().
+#' @param center_option An `integer`. Option to handle time-series centered according to the first year (`center_option` = 0) or mean centred (default, `center_option` = 1).
 #'
 #' @return A `list` of 13 objects: `tmbObj` the output of `MakeADFun()`, `tmbOpt` the optimisation from `tmbObj`, `data_ts` the processed dataset of species time series, `data_ts_se` the processed dataset of time series uncertainty, `data_ts_save` the input dataset of species time series, `data_ts_save_long` the input dataset of species time series in long format, `data_ts_se_save` the input dataset of species uncertainty time series, `ny` the number of time series, `nT` the number of time steps, `aic` the value of the AIC, `conv` the result of the convergence check, `sdRep_test` the summary of the TMB optimisation output, `sdRep_test_all` the complete TMB optimisation output
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' core_dfa(data_ts=data_ts, data_ts_se=data_ts_se, nfac=i, silent = silent, control = control)
+#' core_dfa(data_ts=data_ts, data_ts_se=data_ts_se, nfac=i, silent = silent, control = control, center_option = 1)
 #' }
 core_dfa <- function(data_ts,
                      data_ts_se,
                      nfac,
                      AIC=TRUE,
                      silent = TRUE,
-                     control = list()
+                     control = list(),
+                     center_option = 1
 ) {
 
   # Save input data for plot
 
-  data_ts_save <- as.data.frame(data_ts)
-  data_ts_se_save <- as.data.frame(data_ts_se)
-  data_ts_save_long <- cbind(melt(data_ts_save, id.vars=names(data_ts_save)[1]),
-                             se=melt(data_ts_se_save, id.vars=names(data_ts_se_save)[1])[,3])
+  data_ts_save <- data.frame(code_sp=row.names(data_ts),as.data.frame(data_ts))
+  data_ts_se_save <- data.frame(code_sp=row.names(data_ts_se),as.data.frame(data_ts_se))
+  data_ts_save_long <- cbind(reshape2::melt(data_ts_save, id.vars=names(data_ts_save)[1]),
+                             se=reshape2::melt(data_ts_se_save, id.vars=names(data_ts_se_save)[1])[,3])
   names(data_ts_save_long)[2:4] <- c("Year","value_orig","se_orig")
-  data_ts_save_long$Year <- as.numeric(as.character(data_ts_save_long$Year))
-
-  # Remove potential column of ts names
-
-  data_ts <- data_ts %>% select_if(Negate(is.character))
-  data_ts_se <- data_ts_se %>% select_if(Negate(is.character))
+  data_ts_save_long$Year <- as.numeric(sub(".*X","",data_ts_save_long$Year))
 
   # Overwrite any changes to default control
   con <- list(nstart = 3, maxit = 10000, reltol = 1e-12, factr = 1e-11, gradtol = 1e-3, nlldeltatol = 1e-4, method = c('NLMINB', 'BFGS'))
   con[names(control)] <- control
 
-  # Initialise Z_pred, actual values will be provided by group_from_dfa2
+  # Initialise Z_pred, actual values will be provided by group_from_dfa1
 
   Z_predinit <- matrix(rep(0, 10 * nfac), ncol = nfac)
   W_init <- rbind(1/nrow(data_ts),       # Overall mean, useful to get geometric mean trend across all species
@@ -52,9 +49,9 @@ core_dfa <- function(data_ts,
 
   # SE is on log-scale, so no transformation needed
 
-  dataTmb <- list(y = log(as.matrix(data_ts)),
-                  obs_se = as.matrix(data_ts_se),
-                  center = 1,
+  dataTmb <- list(y = log(data_ts),
+                  obs_se = data_ts_se,
+                  center = center_option,
                   Z_pred = Z_predinit,
                   W = W_init)
 
@@ -99,7 +96,7 @@ core_dfa <- function(data_ts,
 
 
     # Make DFA
-    tmbObj <- MakeADFun(data = dataTmb, parameters = tmbPar, map = tmbMap, random= c("x"), DLL= "dfa_model_se", silent = silent)
+    tmbObj <- MakeADFun(data = dataTmb, parameters = tmbPar, map = tmbMap, random= c("x"), DLL= "DFAclust", silent = silent)
     optList[[i]] = switch(names(optList)[i],
                           NLMINB = nlminb(tmbObj$par, tmbObj$fn, tmbObj$gr, control = list(iter.max = con$maxit, eval.max  =2*con$maxit, rel.tol =  con$reltol)),
                           BFGS = optim(tmbObj$par, tmbObj$fn, tmbObj$gr, method = 'BFGS', control = list(maxit = con$maxit, reltol = con$reltol)),

@@ -1,4 +1,4 @@
-#' Title
+#' Combine all functions
 #'
 #' @param data_ts  A `data.table`. Dataset of species time series. It should be provided as a data.table with species time-series in row, the first column for species names' codes and years as column names.
 #' @param data_ts_se A `data.table`. Dataset of uncertainty (e.g. standard error) of species time series. It should be provided as a data.table with log species uncertainty time-series in row, the first column for species names' codes and years as column names.

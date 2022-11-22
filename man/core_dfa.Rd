@@ -10,13 +10,14 @@ core_dfa(
   nfac,
   AIC = TRUE,
   silent = TRUE,
-  control = list()
+  control = list(),
+  center_option = 1
 )
 }
 \arguments{
-\item{data_ts}{A \code{data.table}. Dataset of species time series. It should be provided as a data.table with species time-series in row, the first column for species names' codes and years as column names.}
+\item{data_ts}{A \code{matrix} of species time series. It should be provided as a \code{matrix} with species time-series in row, species' codes as row names and years as column names.}
 
-\item{data_ts_se}{A \code{data.table}. Dataset of uncertainty (e.g. standard error) of species time series. It should be provided as a data.table with species uncertainty time-series in row, the first column for species names' codes and years as column names.}
+\item{data_ts_se}{A \code{matrix} of species of uncertainty (e.g. standard error) of species time series. It should be provided as a \code{matrix} with log species uncertainty time-series in row, species' codes as row names and years as column names.}
 
 \item{nfac}{An \code{integer}. Number of trends for the DFA.}
 
@@ -25,6 +26,8 @@ core_dfa(
 \item{silent}{A \code{logical} value. \code{TRUE} silences \code{MakeADFun()}, \code{FALSE} does not. Default is TRUE.}
 
 \item{control}{A \code{list}. Control option for \code{MakeADFun()}. Default is list().}
+
+\item{center_option}{An \code{integer}. Option to handle time-series centered according to the first year (\code{center_option} = 0) or mean centred (default, \code{center_option} = 1).}
 }
 \value{
 A \code{list} of 13 objects: \code{tmbObj} the output of \code{MakeADFun()}, \code{tmbOpt} the optimisation from \code{tmbObj}, \code{data_ts} the processed dataset of species time series, \code{data_ts_se} the processed dataset of time series uncertainty, \code{data_ts_save} the input dataset of species time series, \code{data_ts_save_long} the input dataset of species time series in long format, \code{data_ts_se_save} the input dataset of species uncertainty time series, \code{ny} the number of time series, \code{nT} the number of time steps, \code{aic} the value of the AIC, \code{conv} the result of the convergence check, \code{sdRep_test} the summary of the TMB optimisation output, \code{sdRep_test_all} the complete TMB optimisation output
@@ -34,6 +37,6 @@ Core function running the DFA and compute the AIC for a given number of latent t
 }
 \examples{
 \dontrun{
-core_dfa(data_ts=data_ts, data_ts_se=data_ts_se, nfac=i, silent = silent, control = control)
+core_dfa(data_ts=data_ts, data_ts_se=data_ts_se, nfac=i, silent = silent, control = control, center_option = 1)
 }
 }
