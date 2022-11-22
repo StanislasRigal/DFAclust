@@ -8,7 +8,7 @@
 #' @param control A `list`. Control option for `MakeADFun()`. Default is list().
 #' @param center_option An `integer`. Option to handle time-series centered according to the first year (`center_option` = 0) or mean centred (default, `center_option` = 1).
 #'
-#' @return A `list` of 13 objects: `tmbObj` the output of `MakeADFun()`, `tmbOpt` the optimisation from `tmbObj`, `data_ts` the processed dataset of species time series, `data_ts_se` the processed dataset of time series uncertainty, `data_ts_save` the input dataset of species time series, `data_ts_save_long` the input dataset of species time series in long format, `data_ts_se_save` the input dataset of species uncertainty time series, `ny` the number of time series, `nT` the number of time steps, `aic` the value of the AIC, `conv` the result of the convergence check, `sdRep_test` the summary of the TMB optimisation output, `sdRep_test_all` the complete TMB optimisation output
+#' @return A `list` of 13 objects: `tmbObj` the output of `MakeADFun()`, `tmbOpt` the optimisation from `tmbObj`, `data_ts` the processed `matrix` of species time series, `data_ts_se` the processed `matrix` of time series uncertainty, `data_ts_save` a `data.frame` of input species time series, `data_ts_save_long` a `data.frame` of input species time series in long format, `data_ts_se_save` a `data.frame` of input species uncertainty time series, `ny` the number of time series, `nT` the number of time steps, `aic` the value of the AIC, `conv` the result of the convergence check, `sdRep_test` the summary of the TMB optimisation output, `sdRep_test_all` the complete TMB optimisation output.
 #' @export
 #'
 #' @examples
@@ -139,18 +139,18 @@ core_dfa <- function(data_ts,
     writeLines(paste('AIC: ', aic))
   } else {aic <- bic <- NA}
 
-  return(list(tmbObj, # TMB output
-              tmbOpt, # Optimisation from TMB
-              data_ts, # Dataset of time series (output)
-              data_ts_se, # Dataset of standard error of time series (output)
-              data_ts_save, # Dataset of time series (input saved)
-              data_ts_save_long, # Dataset of time series (input saved in long format)
-              data_ts_se_save, # Dataset of standard error of time series (input saved)
-              ny, # Number of time series
-              nT, # Number of time step
-              aic, # AIC
-              conv, # Convergence check
-              sdRep_test, # Summary of the TMB optimisation output
-              sdRep_test_all # Complete TMB optimisation output
+  return(list(tmbObj = tmbObj, # TMB output
+              tmbOpt = tmbOpt, # Optimisation from TMB
+              data_ts = data_ts, # Dataset of time series (output)
+              data_ts_se = data_ts_se, # Dataset of standard error of time series (output)
+              data_ts_save = data_ts_save, # Dataset of time series (input saved)
+              data_ts_save_long = data_ts_save_long, # Dataset of time series (input saved in long format)
+              data_ts_se_save = data_ts_se_save, # Dataset of standard error of time series (input saved)
+              ny = ny, # Number of time series
+              nT = nT, # Number of time step
+              aic = aic, # AIC
+              conv = conv, # Convergence check
+              sdRep_test = sdRep_test, # Summary of the TMB optimisation output
+              sdRep_test_all = sdRep_test_all # Complete TMB optimisation output
   ))
 }

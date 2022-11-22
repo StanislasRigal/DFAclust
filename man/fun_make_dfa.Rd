@@ -48,12 +48,13 @@ fun_make_dfa(
 \item{control}{A \code{list}. Control option for \code{MakeADFun()}. Default is list().}
 }
 \value{
-A list of 17 objects: \code{data_to_plot_sp} data on species time-series and fit, \code{data_to_plot_tr} data on latent trends, \code{data_loadings} data on factor loadings, \code{exp_var_lt} data on \% of variance of species ts explained by latent trends, \code{plot_sp} plot of species time-series and fit, \code{plot_tr} plot of latent trends, \code{plot_ld} plot of factor loadings, \code{plot_perc_var} plot of \% of variance of species ts explained by latent trends, \code{plot_sp_group} plot clusters in factorial plan, \code{plot_group_ts} plot clustertime-series, \code{plot_group_ts2} plot clustertime-series from sdRep, \code{aic} best AIC, \code{sdRep} optimisation output, \code{group_dfa} cluster results, \code{trend_group} cluster centre times-series, \code{trend_group2} cluster centre times-series from sdRep, \code{data_msi} data for multi-species index
+A list of 21 objects: \code{tmbObj} the output of \code{MakeADFun()}, \code{tmbOpt} the optimisation from \code{tmbObj}, \code{data_ts} the processed \code{matrix} of species time series, \code{data_ts_se} the processed \code{matrix} of time series uncertainty, \code{data_ts_save} a \code{data.frame} of input species time series, \code{data_ts_save_long} a \code{data.frame} of input species time series in long format, \code{data_ts_se_save} a \code{data.frame} of input species uncertainty time series, \code{nfac} the number of latent trends, \code{ny} the number of time series, \code{nT} the number of time steps, \code{aic} the value of the AIC, \code{conv} the result of the convergence check, \code{sdRep_test} the summary of the TMB optimisation output, \code{sdRep_test_all} the complete TMB optimisation output, \code{x_hat} estimated latent trends, \code{x_hat_se} standard error of estimated latent trends, \code{Z_hat} estimated factor loadings, \code{Z_hat_orig} initial estimated factor loadings, \code{Z_hat_se} standard error of estimated factor loadings, \code{cov_mat_Z} covariance matrix of factor loadings, \code{data_loadings} \code{data.frame} of factor loadings.
 }
 \description{
 Run DFA
 }
 \examples{
+\dontrun{
 data(species_ts_mat)
 data(species_uncert_ts_mat)
 species_ts_mat[species_ts_mat==0] <- NA
@@ -65,4 +66,5 @@ dfa_result <- fun_make_dfa(data_ts = data_ready_dfa$data_ts,data_ts_se = data_re
 min_year = data_ready_dfa$min_year, max_year = data_ready_dfa$max_year, species_name_ordre = data_ready_dfa$species_name_ordre,
 species_sub = species_name, nfac = 0, mintrend = 1, maxtrend = 5, AIC = TRUE,
 center_option = 1, silent = TRUE, control = list())
+}
 }

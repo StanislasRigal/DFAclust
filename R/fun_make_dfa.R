@@ -14,23 +14,25 @@
 #' @param silent A `logical` value. `TRUE` silences `MakeADFun()`, `FALSE` does not. Default is `TRUE`.
 #' @param control A `list`. Control option for `MakeADFun()`. Default is list().
 #'
-#' @return A list of 17 objects: `data_to_plot_sp` data on species time-series and fit, `data_to_plot_tr` data on latent trends, `data_loadings` data on factor loadings, `exp_var_lt` data on % of variance of species ts explained by latent trends, `plot_sp` plot of species time-series and fit, `plot_tr` plot of latent trends, `plot_ld` plot of factor loadings, `plot_perc_var` plot of % of variance of species ts explained by latent trends, `plot_sp_group` plot clusters in factorial plan, `plot_group_ts` plot clustertime-series, `plot_group_ts2` plot clustertime-series from sdRep, `aic` best AIC, `sdRep` optimisation output, `group_dfa` cluster results, `trend_group` cluster centre times-series, `trend_group2` cluster centre times-series from sdRep, `data_msi` data for multi-species index
+#' @return A list of 21 objects: `tmbObj` the output of `MakeADFun()`, `tmbOpt` the optimisation from `tmbObj`, `data_ts` the processed `matrix` of species time series, `data_ts_se` the processed `matrix` of time series uncertainty, `data_ts_save` a `data.frame` of input species time series, `data_ts_save_long` a `data.frame` of input species time series in long format, `data_ts_se_save` a `data.frame` of input species uncertainty time series, `nfac` the number of latent trends, `ny` the number of time series, `nT` the number of time steps, `aic` the value of the AIC, `conv` the result of the convergence check, `sdRep_test` the summary of the TMB optimisation output, `sdRep_test_all` the complete TMB optimisation output, `x_hat` estimated latent trends, `x_hat_se` standard error of estimated latent trends, `Z_hat` estimated factor loadings, `Z_hat_orig` initial estimated factor loadings, `Z_hat_se` standard error of estimated factor loadings, `cov_mat_Z` covariance matrix of factor loadings, `data_loadings` `data.frame` of factor loadings.
 #' @export
 #' @importFrom graphics pie
 #' @importFrom stats complete.cases dist kmeans lm na.omit nlminb optim prcomp rnorm runif sd setNames varimax weighted.mean
 #'
 #' @examples
+#' \dontrun{
 #' data(species_ts_mat)
 #' data(species_uncert_ts_mat)
 #' species_ts_mat[species_ts_mat==0] <- NA
 #'
 #' data_ready_dfa <- data_check_prepare(data_ts = species_ts_mat,data_ts_se = species_uncert_ts_mat,
-#'se_log = FALSE,is_mean_centred = FALSE, min_year_sc=2000)
+#' se_log = FALSE,is_mean_centred = FALSE, min_year_sc=2000)
 #'
 #' dfa_result <- fun_make_dfa(data_ts = data_ready_dfa$data_ts,data_ts_se = data_ready_dfa$data_ts_se,
 #' min_year = data_ready_dfa$min_year, max_year = data_ready_dfa$max_year, species_name_ordre = data_ready_dfa$species_name_ordre,
 #' species_sub = species_name, nfac = 0, mintrend = 1, maxtrend = 5, AIC = TRUE,
 #' center_option = 1, silent = TRUE, control = list())
+#' }
 fun_make_dfa <- function(data_ts,
                      data_ts_se,
                      min_year,
@@ -73,19 +75,19 @@ fun_make_dfa <- function(data_ts,
   }else{
     core_dfa_res <- core_dfa(data_ts=data_ts, data_ts_se=data_ts_se, nfac=nfac, silent = silent, control = control)
   }
-  tmbObj <- core_dfa_res[[1]]
-  tmbOpt <- core_dfa_res[[2]]
-  data_ts <- core_dfa_res[[3]]
-  data_ts_se <- core_dfa_res[[4]]
-  data_ts_save <- core_dfa_res[[5]]
-  data_ts_save_long <- core_dfa_res[[6]]
-  data_ts_se_save <- core_dfa_res[[7]]
-  ny <- core_dfa_res[[8]]
-  nT <- core_dfa_res[[9]]
-  aic <- core_dfa_res[[10]]
-  conv <- core_dfa_res[[11]]
-  sdRep_test <- core_dfa_res[[12]]
-  sdRep_test_all <- core_dfa_res[[13]]
+  tmbObj <- core_dfa_res$tmbObj
+  tmbOpt <- core_dfa_res$tmbOpt
+  data_ts <- core_dfa_res$data_ts
+  data_ts_se <- core_dfa_res$data_ts_se
+  data_ts_save <- core_dfa_res$data_ts_save
+  data_ts_save_long <- core_dfa_res$data_ts_save_long
+  data_ts_se_save <- core_dfa_res$data_ts_se_save
+  ny <- core_dfa_res$ny
+  nT <- core_dfa_res$nT
+  aic <- core_dfa_res$aic
+  conv <- core_dfa_res$conv
+  sdRep_test <- core_dfa_res$sdRep_test
+  sdRep_test_all <- core_dfa_res$sdRep_test_all
 
   if(is.na(aic)){
     stop("Convergence issues")
@@ -132,6 +134,7 @@ fun_make_dfa <- function(data_ts,
               data_ts_save = data_ts_save,
               data_ts_save_long = data_ts_save_long,
               data_ts_se_save = data_ts_se_save,
+              nfac = nfac,
               ny = ny,
               nT = nT,
               aic = aic,

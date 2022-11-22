@@ -3,7 +3,7 @@
 #' Link species names and codes.
 #'
 #' @format ## `species_name`
-#' A data.table with 21 rows and 2 columns:
+#' A data.frame with 21 rows and 2 columns:
 #' \describe{
 #'   \item{name_long}{Latin name}
 #'   \item{code_sp}{Species code}
