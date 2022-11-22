@@ -8,10 +8,11 @@
 #' @param nfac An `integer`. Number of latent trends.
 #' @param data_ts A `matrix` of species time series.
 #'
-#' @return
+#' @return A `list` of three objects: `group_dfa` clustering output, `Z_pred_from_kmeans` factor loadings of clusters, `W_from_kmeans` weight of species time series.
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' data(species_ts_mat)
 #' data(species_uncert_ts_mat)
 #' species_ts_mat[species_ts_mat==0] <- NA
@@ -26,7 +27,10 @@
 #'
 #' data(species_name)
 #'
-#' cluster_result <- cluster_dfa(data_loadings = dfa_result$data_loadings, cov_mat_Z = dfa_result$cov_mat_Z, species_sub = species_name, nboot = 500, ny = dfa_result$ny, nfac = dfa_result$nfac, data_ts = dfa_result$data_ts)
+#' cluster_result <- cluster_dfa(data_loadings = dfa_result$data_loadings,
+#' cov_mat_Z = dfa_result$cov_mat_Z, species_sub = species_name, nboot = 500,
+#' ny = dfa_result$ny, nfac = dfa_result$nfac, data_ts = dfa_result$data_ts)
+#' }
 cluster_dfa <- function(data_loadings,
                         cov_mat_Z,
                         species_sub,

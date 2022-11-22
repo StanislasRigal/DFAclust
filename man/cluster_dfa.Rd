@@ -29,10 +29,14 @@ cluster_dfa(
 
 \item{data_ts}{A \code{matrix} of species time series.}
 }
+\value{
+A \code{list} of three objects: \code{group_dfa} clustering output, \code{Z_pred_from_kmeans} factor loadings of clusters, \code{W_from_kmeans} weight of species time series.
+}
 \description{
 Clustering function to process DFA results.
 }
 \examples{
+\dontrun{
 data(species_ts_mat)
 data(species_uncert_ts_mat)
 species_ts_mat[species_ts_mat==0] <- NA
@@ -47,5 +51,8 @@ center_option = 1, silent = TRUE, control = list())
 
 data(species_name)
 
-cluster_result <- cluster_dfa(data_loadings = dfa_result$data_loadings, cov_mat_Z = dfa_result$cov_mat_Z, species_sub = species_name, nboot = 500, ny = dfa_result$ny, nfac = dfa_result$nfac, data_ts = dfa_result$data_ts)
+cluster_result <- cluster_dfa(data_loadings = dfa_result$data_loadings,
+cov_mat_Z = dfa_result$cov_mat_Z, species_sub = species_name, nboot = 500,
+ny = dfa_result$ny, nfac = dfa_result$nfac, data_ts = dfa_result$data_ts)
+}
 }
