@@ -13,9 +13,9 @@ data_check_prepare(
 )
 }
 \arguments{
-\item{data_ts}{A \code{data.table}. Dataset of species time series. It should be provided as a data.table with species time-series in row, the first column for species names' codes and years as column names.}
+\item{data_ts}{A \code{matrix}. Dataset of species time series. It should be provided as a matrix with species time-series in row, species' codes as row names and years as column names.}
 
-\item{data_ts_se}{A \code{data.table}. Dataset of uncertainty (e.g. standard error) of species time series. It should be provided as a data.table with log species uncertainty time-series in row, the first column for species names' codes and years as column names.}
+\item{data_ts_se}{A \code{matrix}. Dataset of uncertainty (e.g. standard error) of species time series. It should be provided as a matrix with log uncertainty of species time-series in row, species' codes as row names and years as column names.}
 
 \item{se_log}{A \code{logical} value. \code{TRUE} if \code{data_ts_se} is provided with log values. \code{FALSE} if it is provided with not log values. Default is \code{TRUE}.}
 

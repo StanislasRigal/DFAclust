@@ -28,7 +28,7 @@ group_from_dfa_boot1 <- function(data_loadings,
 
   # Loadings in matrix
 
-  dfa_res_val <- dcast(data_loadings, code_sp~variable, value.var = "value")
+  dfa_res_val <- reshape2::dcast(data_loadings, code_sp~variable, value.var = "value")
   mat_loading <- as.matrix(dfa_res_val[,-1])
 
   # Find the best number of clusters in the original data
@@ -130,7 +130,7 @@ group_from_dfa_boot1 <- function(data_loadings,
             jac_sim_mat[1,][which(jac_sim_mat[1,]!=k)] <- 0
             jac_sim_mat[2,][which(jac_sim_mat[2,]!=l)] <- 0
             jac_sim_mat[jac_sim_mat>0] <- 1
-            jac_sim <- c(1 - vegdist(jac_sim_mat, method="jaccard"))
+            jac_sim <- c(1 - vegan::vegdist(jac_sim_mat, method="jaccard"))
             jac_sim_res[l,k] <- jac_sim
           }
         }

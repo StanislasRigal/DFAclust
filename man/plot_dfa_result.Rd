@@ -7,6 +7,7 @@
 plot_dfa_result(
   data_ts_save,
   data_ts_se_save,
+  data_ts_save_long,
   data_ts,
   data_ts_se,
   sdRep,
@@ -25,6 +26,8 @@ plot_dfa_result(
 \item{data_ts_save}{A \code{data.frame}. Input species time series.}
 
 \item{data_ts_se_save}{A \code{data.frame}. Input uncertainty of species time series.}
+
+\item{data_ts_save_long}{A \code{data.frame}. Input species time series in long format.}
 
 \item{data_ts}{A \code{matrix}. The processed \code{matrix} of species time series.}
 
@@ -81,7 +84,7 @@ dfa_result_update <- update_dfa(tmbObj = dfa_result$tmbObj,
 Z_pred_from_kmeans = cluster_result$Z_pred_from_kmeans,
 W_from_kmeans = cluster_result$W_from_kmeans)
 
-dfa_result_plot = plot_dfa_result(data_ts_save = dfa_result$data_ts_save, data_ts_se_save = dfa_result$data_ts_se_save,
+dfa_result_plot = plot_dfa_result(data_ts_save = dfa_result$data_ts_save, data_ts_se_save = dfa_result$data_ts_se_save, data_ts_save_long = dfa_result$data_ts_save_long,
 data_ts = dfa_result=data_ts, data_ts_se = dfa_result$data_ts_se, sdRep = dfa_result_update$sdRep,
 ny = dfa_result$ny, species_sub = species_name, x_hat = dfa_result$x_hat, x_hat_se = dfa_result$x_hat_se,
 Z_hat = dfa_result$Z_hat, nfac = dfa_result$nfac, group_dfa = cluster_result$group_dfa,

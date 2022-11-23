@@ -1,7 +1,7 @@
 #' Function to check data before DFA
 #'
-#' @param data_ts  A `data.table`. Dataset of species time series. It should be provided as a data.table with species time-series in row, the first column for species names' codes and years as column names.
-#' @param data_ts_se A `data.table`. Dataset of uncertainty (e.g. standard error) of species time series. It should be provided as a data.table with log species uncertainty time-series in row, the first column for species names' codes and years as column names.
+#' @param data_ts  A `matrix`. Dataset of species time series. It should be provided as a matrix with species time-series in row, species' codes as row names and years as column names.
+#' @param data_ts_se A `matrix`. Dataset of uncertainty (e.g. standard error) of species time series. It should be provided as a matrix with log uncertainty of species time-series in row, species' codes as row names and years as column names.
 #' @param se_log A `logical` value. `TRUE` if `data_ts_se` is provided with log values. `FALSE` if it is provided with not log values. Default is `TRUE`.
 #' @param is_mean_centred A `logical` value. `TRUE` if `data_ts` is provided with mean-centred values. `FALSE` if it is provided with non mean-centred values. Default is `TRUE`.
 #' @param min_year_sc An `integer`. First year of the period to select for rescaling if `is_mean_centred` = `FALSE`.
@@ -68,8 +68,7 @@ data_check_prepare <- function(data_ts,
         data_ts_se[zero_index[i,1],zero_index[i,2]] <- 0
       }
     }
-    data_ts_se <- as.data.table(data_ts_se)
-  }
+ }
 
   # Mean-centre values if they are not
 

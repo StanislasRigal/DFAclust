@@ -96,7 +96,7 @@ core_dfa <- function(data_ts,
 
 
     # Make DFA
-    tmbObj <- MakeADFun(data = dataTmb, parameters = tmbPar, map = tmbMap, random= c("x"), DLL= "DFAclust", silent = silent)
+    tmbObj <- TMB::MakeADFun(data = dataTmb, parameters = tmbPar, map = tmbMap, random= c("x"), DLL= "DFAclust", silent = silent)
     optList[[i]] = switch(names(optList)[i],
                           NLMINB = nlminb(tmbObj$par, tmbObj$fn, tmbObj$gr, control = list(iter.max = con$maxit, eval.max  =2*con$maxit, rel.tol =  con$reltol)),
                           BFGS = optim(tmbObj$par, tmbObj$fn, tmbObj$gr, method = 'BFGS', control = list(maxit = con$maxit, reltol = con$reltol)),
@@ -123,7 +123,7 @@ core_dfa <- function(data_ts,
   tmbOpt <- optList[[ind.best]]
   tmbObj <- tmbList[[ind.best]]
 
-  sdRep_test_all <- sdreport(tmbObj)
+  sdRep_test_all <- TMB::sdreport(tmbObj)
   sdRep_test <- summary(sdRep_test_all)
 
   # Check convergence

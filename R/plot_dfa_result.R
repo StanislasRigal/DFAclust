@@ -2,6 +2,7 @@
 #'
 #' @param data_ts_save A `data.frame`. Input species time series.
 #' @param data_ts_se_save A `data.frame`. Input uncertainty of species time series.
+#' @param data_ts_save_long A `data.frame`. Input species time series in long format.
 #' @param data_ts A `matrix`. The processed `matrix` of species time series.
 #' @param data_ts_se A `matrix`. The processed `matrix` of uncertainty of species time series.
 #' @param sdRep A `TMB` object. Summary of the TMB optimisation output.
@@ -43,7 +44,7 @@
 #' Z_pred_from_kmeans = cluster_result$Z_pred_from_kmeans,
 #' W_from_kmeans = cluster_result$W_from_kmeans)
 #'
-#' dfa_result_plot = plot_dfa_result(data_ts_save = dfa_result$data_ts_save, data_ts_se_save = dfa_result$data_ts_se_save,
+#' dfa_result_plot = plot_dfa_result(data_ts_save = dfa_result$data_ts_save, data_ts_se_save = dfa_result$data_ts_se_save, data_ts_save_long = dfa_result$data_ts_save_long,
 #' data_ts = dfa_result=data_ts, data_ts_se = dfa_result$data_ts_se, sdRep = dfa_result_update$sdRep,
 #' ny = dfa_result$ny, species_sub = species_name, x_hat = dfa_result$x_hat, x_hat_se = dfa_result$x_hat_se,
 #' Z_hat = dfa_result$Z_hat, nfac = dfa_result$nfac, group_dfa = cluster_result$group_dfa,
@@ -51,6 +52,7 @@
 #' }
 plot_dfa_result <- function(data_ts_save,
                             data_ts_se_save,
+                            data_ts_save_long,
                             data_ts,
                             data_ts_se,
                             sdRep,
@@ -98,7 +100,7 @@ plot_dfa_result <- function(data_ts_save,
   data_to_plot_sp$pred_se.value_exp <- exp(data_to_plot_sp$pred.value)*data_to_plot_sp$pred_se.value
   data_to_plot_sp$se.value_exp <- data_to_plot_sp$value*data_to_plot_sp$se.value
 
-  data_to_plot_sp <- ddply(data_to_plot_sp, .(code_sp,name_long),
+  data_to_plot_sp <- plyr::ddply(data_to_plot_sp, .(code_sp,name_long),
                            .fun = function(x){
                              x$value_1 <- x$value/x$value[1]
                              x$pred.value_exp_1 <- x$pred.value_exp/x$pred.value_exp[1]
@@ -141,7 +143,7 @@ plot_dfa_result <- function(data_ts_save,
     # Data for % variance of species ts explained by latent trends
 
     exp_var_lt <- data_loadings[,c("variable","value","name_long")]
-    exp_var_lt <- dcast(exp_var_lt, name_long~variable, value.var = "value", fun.aggregate = sum)
+    exp_var_lt <- reshape2::dcast(exp_var_lt, name_long~variable, value.var = "value", fun.aggregate = sum)
     eta_sp <- data.frame(name_long=species_sub$name_long, eta=sdRep[!grepl("log_re_sp", row.names(sdRep)) & grepl("re_sp", row.names(sdRep)) ,1])
     exp_var_lt <- merge(exp_var_lt,eta_sp, by="name_long", all.x=T)
 
@@ -153,20 +155,20 @@ plot_dfa_result <- function(data_ts_save,
 
     # Plots
 
-    plot_sp <- ggplot(data_to_plot_sp, aes(x=Year, y=value)) + geom_point() +
+    plot_sp <- ggplot2::ggplot(data_to_plot_sp, aes(x=Year, y=value)) + geom_point() +
       geom_pointrange(aes(ymax = value + 1.96 * se.value_exp, ymin=value - 1.96 * se.value_exp)) +
       geom_line(aes(y=pred.value_exp)) +
       geom_ribbon(aes(y=pred.value_exp, ymax = pred.value_exp + 1.96*pred_se.value_exp, ymin=pred.value_exp - 1.96*pred_se.value_exp), alpha=0.5) +
       facet_wrap(name_long ~ ., ncol=round(sqrt(length(unique(data_to_plot_sp$code_sp)))), scales = "free", labeller = label_bquote(col = italic(.(name_long)))) +
       theme_modern() + theme(axis.title.x = element_blank(), axis.title.y = element_blank())
 
-    plot_tr <- ggplot(data_to_plot_tr, aes(x=Year, y=rot_tr.value)) +
+    plot_tr <- ggplot2::ggplot(data_to_plot_tr, aes(x=Year, y=rot_tr.value)) +
       geom_line(aes(colour=variable))+ylab("Rotated value") +
       geom_ribbon(aes(ymax = (rot_tr.value+1.96*se.value), ymin=(rot_tr.value-1.96*se.value), fill=variable), alpha=0.1) +
       facet_wrap(variable ~ ., ncol=min(3,length(unique(data_to_plot_tr$variable)))) +
       theme_modern() + theme(legend.position = "none")
 
-    plot_ld <- ggplot(data_loadings) +
+    plot_ld <- ggplot2::ggplot(data_loadings) +
       geom_col(aes(value, name_long, fill=variable)) +
       geom_errorbar(aes(x=value,y=name_long,xmax = value+se.value, xmin=value-se.value), alpha=0.5) +
       facet_wrap(variable ~ ., ncol=length(unique(data_loadings$variable))) +
@@ -174,7 +176,7 @@ plot_dfa_result <- function(data_ts_save,
       theme(legend.position = "none", axis.title.x = element_blank(), axis.title.y = element_blank(),
             axis.text.x = element_text(angle = 45, hjust = 1), axis.text.y = element_text(face="italic"))
 
-    plot_perc_var <- ggplot(exp_var_lt_long) +
+    plot_perc_var <- ggplot2::ggplot(exp_var_lt_long) +
       geom_col(aes(value, name_long, fill=variable)) +
       facet_wrap(variable ~ ., ncol=length(unique(exp_var_lt_long$variable))) +
       theme_modern() +
@@ -198,7 +200,7 @@ plot_dfa_result <- function(data_ts_save,
     # Data for % variance of species ts explained by latent trends
 
     exp_var_lt <- data_loadings[,c("variable","value","name_long")]
-    exp_var_lt <- dcast(exp_var_lt, name_long~variable, value.var = "value", fun.aggregate = sum)
+    exp_var_lt <- reshape2::dcast(exp_var_lt, name_long~variable, value.var = "value", fun.aggregate = sum)
     eta_sp <- data.frame(name_long=species_sub$name_long, eta=sdRep[!grepl("log_re_sp", row.names(sdRep)) & grepl("re_sp", row.names(sdRep)) ,1])
     exp_var_lt <- merge(exp_var_lt,eta_sp, by="name_long", all.x=T)
 
@@ -210,22 +212,22 @@ plot_dfa_result <- function(data_ts_save,
 
     # Plots
 
-    plot_sp <- ggplot(data_to_plot_sp, aes(x=Year, y=value)) + geom_point() +
+    plot_sp <- ggplot2::ggplot(data_to_plot_sp, aes(x=Year, y=value)) + geom_point() +
       geom_pointrange(aes(ymax = value + 1.96 * se.value_exp, ymin=value - 1.96 * se.value_exp)) +
       facet_wrap(code_sp ~ ., ncol=4, scales = "free") +
       theme_modern()
 
-    plot_tr <- ggplot(data_to_plot_tr, aes(x=Year, y=value)) +
+    plot_tr <- ggplot2::ggplot(data_to_plot_tr, aes(x=Year, y=value)) +
       geom_line(aes(colour=variable))+
       theme_modern()
 
-    plot_ld <- ggplot(data_loadings) +
+    plot_ld <- ggplot2::ggplot(data_loadings) +
       geom_col(aes(value, name_long, fill=variable)) +
       geom_errorbar(aes(x=value,y=name_long,xmax = value+se.value, xmin=value-se.value), alpha=0.5) +
       facet_wrap(variable ~ ., ncol=4) +
       theme_modern() + theme(legend.position = "none")
 
-    plot_perc_var <- ggplot(exp_var_lt_long) +
+    plot_perc_var <- ggplot2::ggplot(exp_var_lt_long) +
       geom_col(aes(value, name_long, fill=variable)) +
       facet_wrap(variable ~ ., ncol=length(unique(exp_var_lt_long$variable))) +
       theme_modern() +

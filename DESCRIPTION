@@ -18,19 +18,13 @@ Depends:
     R (>= 2.10)
 LinkingTo: TMB, RcppEigen
 Imports: 
-    data.table,
     dplyr,
-    forcats,
     ggplot2,
     ggrepel,
-    lcmix,
-    maditr,
     mvtnorm,
-    NbClust,
     plyr,
     reshape2,
     scales,
     see,
-    stringr,
     vegan
 LazyData: true
