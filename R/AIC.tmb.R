@@ -11,5 +11,6 @@
 #' aic <- AIC.tmb(tmbObj)
 #' }
 AIC.tmb <- function(obj) {
-  as.numeric(2 * obj$env$value.best + 2*(sum(obj$env$lfixed())))
+  aic_res <- as.numeric(2 * obj$env$value.best + 2*(sum(obj$env$lfixed())))
+  return(aic_res)
 }
