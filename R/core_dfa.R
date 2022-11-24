@@ -135,7 +135,7 @@ core_dfa <- function(data_ts,
   # Compute AIC
 
   if(AIC){
-    aic <- AIC.tmb(tmbObj)
+    aic <- AIC_tmb(tmbObj)
     writeLines(paste('AIC: ', aic))
   } else {aic <- bic <- NA}
 
