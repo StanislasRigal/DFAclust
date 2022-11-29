@@ -12,9 +12,9 @@
 #'
 #' @examples
 #' \dontrun{
-#' group_from_dfa_boot1(data_loadings, cov_mat_Z, species_sub, nboot=nboot, ny, nfac)
+#' group_from_dfa_boot(data_loadings, cov_mat_Z, species_sub, nboot=nboot, ny, nfac)
 #' }
-group_from_dfa_boot1 <- function(data_loadings,
+group_from_dfa_boot <- function(data_loadings,
                                  cov_mat_Z,
                                  species_sub,
                                  nboot=100,

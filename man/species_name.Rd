@@ -7,7 +7,7 @@
 \format{
 \subsection{\code{species_name}}{
 
-A data.frame with 21 rows and 2 columns:
+A data.frame with 19 rows and 2 columns:
 \describe{
 \item{name_long}{Latin name}
 \item{code_sp}{Species code}

@@ -3,14 +3,14 @@
 \docType{data}
 \name{species_ts_mat}
 \alias{species_ts_mat}
-\title{Species Indices of Farmland Bird in Austria}
+\title{Species Indices of Farmland Bird in Czechia}
 \format{
 \subsection{\code{species_ts_mat}}{
 
-A matrix with 21 rows and 20 columns:
+A matrix with 19 rows and 18 columns:
 \describe{
 \item{row.names}{Species code}
-\item{1998 to 2017}{Years}
+\item{2000 to 2017}{Years}
 }
 }
 }

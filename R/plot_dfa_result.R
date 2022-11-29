@@ -23,12 +23,11 @@
 #' \dontrun{
 #' data(species_ts_mat)
 #' data(species_uncert_ts_mat)
-#' species_ts_mat[species_ts_mat==0] <- NA
 #'
-#' data_ready_dfa <- data_check_prepare(data_ts = species_ts_mat,data_ts_se = species_uncert_ts_mat,
-#' se_log = FALSE,is_mean_centred = FALSE, min_year_sc=2000)
+#' data_ready_dfa <- prepare_data(data_ts = species_ts_mat,data_ts_se = species_uncert_ts_mat,
+#' se_log = TRUE, perc_replace = 0.01)
 #'
-#' dfa_result <- fun_make_dfa(data_ts = data_ready_dfa$data_ts,data_ts_se = data_ready_dfa$data_ts_se,
+#' dfa_result <- fit_dfa(data_ts = data_ready_dfa$data_ts,data_ts_se = data_ready_dfa$data_ts_se,
 #' min_year = data_ready_dfa$min_year, max_year = data_ready_dfa$max_year, species_name_ordre = data_ready_dfa$species_name_ordre,
 #' species_sub = species_name, nfac = 0, mintrend = 1, maxtrend = 5, AIC = TRUE,
 #' center_option = 1, silent = TRUE, control = list())
@@ -40,12 +39,8 @@
 #' nboot = 500, ny = dfa_result$ny, nfac = dfa_result$nfac,
 #' data_ts = dfa_result$data_ts)
 #'
-#' dfa_result_update <- update_dfa(tmbObj = dfa_result$tmbObj,
-#' Z_pred_from_kmeans = cluster_result$Z_pred_from_kmeans,
-#' W_from_kmeans = cluster_result$W_from_kmeans)
-#'
-#' dfa_result_plot = plot_dfa_result(data_ts_save = dfa_result$data_ts_save, data_ts_se_save = dfa_result$data_ts_se_save, data_ts_save_long = dfa_result$data_ts_save_long,
-#' data_ts = dfa_result=data_ts, data_ts_se = dfa_result$data_ts_se, sdRep = dfa_result_update$sdRep,
+#' dfa_result_plot <- plot_dfa_result(data_ts_save = dfa_result$data_ts_save, data_ts_se_save = dfa_result$data_ts_se_save, data_ts_save_long = dfa_result$data_ts_save_long,
+#' data_ts = dfa_result=data_ts, data_ts_se = dfa_result$data_ts_se, sdRep = cluster_result$sdRep,
 #' ny = dfa_result$ny, species_sub = species_name, x_hat = dfa_result$x_hat, x_hat_se = dfa_result$x_hat_se,
 #' Z_hat = dfa_result$Z_hat, nfac = dfa_result$nfac, group_dfa = cluster_result$group_dfa,
 #' nT = dfa_result$nT, min_year = data_ready_dfa$min_year)
