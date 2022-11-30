@@ -77,9 +77,6 @@ cluster_dfa <- function(data_loadings,
 
   sdRep <- summary(sdreport(tmbObj))
 
-  return(list(tmbObj = tmbObj,
-              sdRep = sdRep))
-
   return(list(group_dfa = group_dfa,
               Z_pred_from_kmeans = Z_pred_from_kmeans,
               W_from_kmeans = W_from_kmeans,

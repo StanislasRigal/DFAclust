@@ -19,6 +19,7 @@ Depends:
 LinkingTo: TMB, RcppEigen
 Imports: 
     dplyr,
+    forcats,
     ggplot2,
     ggrepel,
     magrittr,

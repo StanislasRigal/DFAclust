@@ -63,15 +63,15 @@ plot_group_boot <- function(nb_group,
     test$Index <- test$Estimate
     min1 <- min(test$Index-1.96*test$Index_SE) + (max(test$Index+1.96*test$Index_SE)-min(test$Index-1.96*test$Index_SE))/10
     min2 <- min(test$Index-1.96*test$Index_SE)
-    ggplot2::ggplot(test, aes(x=year, y=Index)) +
-      geom_line(col=hex_codes1[i], size=2) +
-      geom_ribbon(aes(ymin=Index-1.96*Index_SE,ymax=Index+1.96*Index_SE),alpha=0.2,fill=hex_codes1[i])+
-      xlab(NULL) +
-      ylab(NULL) +
-      annotate("text", x=mean(test$year), y=min1, label= paste0("Stability = ", round(stability_cluster_final[i],3))) +
-      annotate("text", x=mean(test$year), y=min2, label= paste0("Mean distance = ", round(mean_dist_clust[i,1],3))) +
+    ggplot2::ggplot(test, ggplot2::aes(x=year, y=Index)) +
+      ggplot2::geom_line(col=hex_codes1[i], size=2) +
+      ggplot2::geom_ribbon(ggplot2::aes(ymin=Index-1.96*Index_SE,ymax=Index+1.96*Index_SE),alpha=0.2,fill=hex_codes1[i])+
+      ggplot2::xlab(NULL) +
+      ggplot2::ylab(NULL) +
+      ggplot2::annotate("text", x=mean(test$year), y=min1, label= paste0("Stability = ", round(stability_cluster_final[i],3))) +
+      ggplot2::annotate("text", x=mean(test$year), y=min2, label= paste0("Mean distance = ", round(mean_dist_clust[i,1],3))) +
       see::theme_modern() +
-      theme(plot.margin=unit(c(0,0,0,0),"mm"),aspect.ratio = 2/(nb_group+1))
+      ggplot2::theme(plot.margin=ggplot2::unit(c(0,0,0,0),"mm"),aspect.ratio = 2/(nb_group+1))
 
   }), levels(as.factor(data_trend_group$group)))
 
@@ -111,30 +111,30 @@ plot_group_boot <- function(nb_group,
 
     if(i==1){
       geom_mean_data1 <- data.frame(Index = apply(t(apply(data_ts,1,function(y){y/y[1]})), 2, function(x){ sum(log(x), na.rm=T)/length(x) }),
-                                    year = as.numeric(names(data_ts)))
+                                    year = as.numeric(colnames(data_ts)))
 
       geom_mean_data1$Index <- geom_mean_data1$Index-mean(geom_mean_data1$Index)
 
-      ggplot2::ggplot(test, aes(x=year, y=Index)) +
-        geom_line(col="black", size=2) +
-        geom_ribbon(aes(ymin=Index-1.96*Index_SE,ymax=Index+1.96*Index_SE),alpha=0.2,fill="black")+
-        geom_point(data=geom_mean_data1, col="black", size=2) +
-        xlab(NULL) +
-        ylab(NULL) +
-        ylim(c(min_scale,max_scale)) +
+      ggplot2::ggplot(test, ggplot2::aes(x=year, y=Index)) +
+        ggplot2::geom_line(col="black", size=2) +
+        ggplot2::geom_ribbon(ggplot2::aes(ymin=Index-1.96*Index_SE,ymax=Index+1.96*Index_SE),alpha=0.2,fill="black")+
+        ggplot2::geom_point(data=geom_mean_data1, col="black", size=2) +
+        ggplot2::xlab(NULL) +
+        ggplot2::ylab(NULL) +
+        ggplot2::ylim(c(min_scale,max_scale)) +
         see::theme_modern() +
-        theme(plot.margin=unit(c(0,0,0,0),"mm"),aspect.ratio = 2/(nb_group+1))
+        ggplot2::theme(plot.margin=ggplot2::unit(c(0,0,0,0),"mm"),aspect.ratio = 2/(nb_group+1))
     }else{
-      ggplot2::ggplot(test, aes(x=year, y=Index)) +
-        geom_line(col=hex_codes1[as.numeric(sub(".*g","",unique(data_trend_group2$group)[i]))], size=2) +
-        geom_ribbon(aes(ymin=Index-1.96*Index_SE,ymax=Index+1.96*Index_SE),alpha=0.2,fill=hex_codes1[as.numeric(sub(".*g","",unique(data_trend_group2$group)[i]))])+
-        xlab(NULL) +
-        ylab(NULL) +
-        ylim(c(min_scale,max_scale)) +
-        annotate("text", x=mean(test$year), y=min1, label= paste0("Stability = ", round(stability_cluster_final[as.numeric(sub(".*g","",unique(data_trend_group2$group)[i]))],3))) +
-        annotate("text", x=mean(test$year), y=min2, label= paste0("Mean distance = ", round(mean_dist_clust[as.numeric(sub(".*g","",unique(data_trend_group2$group)[i])),1],3))) +
+      ggplot2::ggplot(test, ggplot2::aes(x=year, y=Index)) +
+        ggplot2::geom_line(col=hex_codes1[as.numeric(sub(".*g","",unique(data_trend_group2$group)[i]))], size=2) +
+        ggplot2::geom_ribbon(ggplot2::aes(ymin=Index-1.96*Index_SE,ymax=Index+1.96*Index_SE),alpha=0.2,fill=hex_codes1[as.numeric(sub(".*g","",unique(data_trend_group2$group)[i]))])+
+        ggplot2::xlab(NULL) +
+        ggplot2::ylab(NULL) +
+        ggplot2::ylim(c(min_scale,max_scale)) +
+        ggplot2::annotate("text", x=mean(test$year), y=min1, label= paste0("Stability = ", round(stability_cluster_final[as.numeric(sub(".*g","",unique(data_trend_group2$group)[i]))],3))) +
+        ggplot2::annotate("text", x=mean(test$year), y=min2, label= paste0("Mean distance = ", round(mean_dist_clust[as.numeric(sub(".*g","",unique(data_trend_group2$group)[i])),1],3))) +
         see::theme_modern() +
-        theme(plot.margin=unit(c(0,0,0,0),"mm"),aspect.ratio = 2/(nb_group+1))
+        ggplot2::theme(plot.margin=ggplot2::unit(c(0,0,0,0),"mm"),aspect.ratio = 2/(nb_group+1))
     }
 
   }), levels(as.factor(data_trend_group2$group)))
@@ -150,15 +150,15 @@ plot_group_boot <- function(nb_group,
 
   graph3 <- setNames(lapply(1:4, function(i){
     test <- data.frame(Index=ts_pca[,i], year=1:length(ts_pca[,i]))
-    ggplot2::ggplot(test, aes(x=year, y=Index)) +
-      geom_line(size=1.5, alpha=0.4) + xlab(NULL) + ylab(NULL) +
+    ggplot2::ggplot(test, ggplot2::aes(x=year, y=Index)) +
+      ggplot2::geom_line(size=1.5, alpha=0.4) + ggplot2::xlab(NULL) + ggplot2::ylab(NULL) +
       see::theme_modern() +
       ggimage::theme_transparent() +
-      ylim(c(min_y_graph3,max_y_graph3)) +
-      theme(plot.margin=unit(c(0,0,0,0),"mm"),aspect.ratio = 2/3,
-            axis.title = element_blank(),
-            axis.text = element_blank(),
-            axis.text.x = element_blank())
+      ggplot2::ylim(c(min_y_graph3,max_y_graph3)) +
+      ggplot2::theme(plot.margin=ggplot2::unit(c(0,0,0,0),"mm"),aspect.ratio = 2/3,
+            axis.title = ggplot2::element_blank(),
+            axis.text = ggplot2::element_blank(),
+            axis.text.x = ggplot2::element_blank())
   }), paste0("pca centre ", 1:4))
 
   if(length(kmeans_res[[3]])>2){
@@ -168,15 +168,15 @@ plot_group_boot <- function(nb_group,
 
     graph32 <- setNames(lapply(1:4, function(i){
       test <- data.frame(Index=ts_pca2[,i], year=1:length(ts_pca2[,i]))
-      ggplot2::ggplot(test, aes(x=year, y=Index)) +
-        geom_line(size=1.5, alpha=0.4) + xlab(NULL) + ylab(NULL) +
+      ggplot2::ggplot(test, ggplot2::aes(x=year, y=Index)) +
+        ggplot2::geom_line(size=1.5, alpha=0.4) + ggplot2::xlab(NULL) + ggplot2::ylab(NULL) +
         see::theme_modern() +
         ggimage::theme_transparent() +
-        ylim(c(min_y_graph32,max_y_graph32)) +
-        theme(plot.margin=unit(c(0,0,0,0),"mm"),aspect.ratio = 2/3,
-              axis.title = element_blank(),
-              axis.text = element_blank(),
-              axis.text.x = element_blank())
+        ggplot2::ylim(c(min_y_graph32,max_y_graph32)) +
+        ggplot2::theme(plot.margin=ggplot2::unit(c(0,0,0,0),"mm"),aspect.ratio = 2/3,
+              axis.title = ggplot2::element_blank(),
+              axis.text = ggplot2::element_blank(),
+              axis.text.x = ggplot2::element_blank())
     }), paste0("pca centre ", 1:4))
 
     ts_pca3 <- apply(pca_centre[[3]], 2, function(x){mat_tr_rot %*% matrix(x)})
@@ -185,15 +185,15 @@ plot_group_boot <- function(nb_group,
 
     graph33 <- setNames(lapply(1:4, function(i){
       test <- data.frame(Index=ts_pca3[,i], year=1:length(ts_pca3[,i]))
-      ggplot2::ggplot(test, aes(x=year, y=Index)) +
-        geom_line(size=1.5, alpha=0.4) + xlab(NULL) + ylab(NULL) +
+      ggplot2::ggplot(test, ggplot2::aes(x=year, y=Index)) +
+        ggplot2::geom_line(size=1.5, alpha=0.4) + ggplot2::xlab(NULL) + ggplot2::ylab(NULL) +
         see::theme_modern() +
         ggimage::theme_transparent() +
-        ylim(c(min_y_graph33,max_y_graph33)) +
-        theme(plot.margin=unit(c(0,0,0,0),"mm"),aspect.ratio = 2/3,
-              axis.title = element_blank(),
-              axis.text = element_blank(),
-              axis.text.x = element_blank())
+        ggplot2::ylim(c(min_y_graph33,max_y_graph33)) +
+        ggplot2::theme(plot.margin=ggplot2::unit(c(0,0,0,0),"mm"),aspect.ratio = 2/3,
+              axis.title = ggplot2::element_blank(),
+              axis.text = ggplot2::element_blank(),
+              axis.text.x = ggplot2::element_blank())
     }), paste0("pca centre ", 1:4))
   }
 
@@ -215,7 +215,7 @@ plot_group_boot <- function(nb_group,
                                        min(kmeans_res[[1]]$PC1)-(max(kmeans_res[[1]]$PC1)-min(kmeans_res[[1]]$PC1))/8,0,
                                        max(kmeans_res[[1]]$PC1)+(max(kmeans_res[[1]]$PC1)-min(kmeans_res[[1]]$PC1))/8,0),nrow=2))
 
-  pca_centre_data2 <- tibble(x=pca_centre_data[,1],
+  pca_centre_data2 <- tibble::tibble(x=pca_centre_data[,1],
                              y=pca_centre_data[,2],
                              width=0.08,
                              pie = graph3)
@@ -227,7 +227,7 @@ plot_group_boot <- function(nb_group,
                                           min(kmeans_res[[1]]$PC1)-(max(kmeans_res[[1]]$PC1)-min(kmeans_res[[1]]$PC1))/8,0,
                                           max(kmeans_res[[1]]$PC1)+(max(kmeans_res[[1]]$PC1)-min(kmeans_res[[1]]$PC1))/8,0),nrow=2))
 
-    pca_centre_data2b <- tibble(x=pca_centre_datab[,1],
+    pca_centre_data2b <- tibble::tibble(x=pca_centre_datab[,1],
                                 y=pca_centre_datab[,2],
                                 width=0.08,
                                 pie = graph32)
@@ -238,53 +238,53 @@ plot_group_boot <- function(nb_group,
                                           min(kmeans_res[[1]]$PC2)-(max(kmeans_res[[1]]$PC2)-min(kmeans_res[[1]]$PC2))/8,0,
                                           max(kmeans_res[[1]]$PC2)+(max(kmeans_res[[1]]$PC2)-min(kmeans_res[[1]]$PC2))/8,0),nrow=2))
 
-    pca_centre_data2c <- tibble(x=pca_centre_datac[,1],
+    pca_centre_data2c <- tibble::tibble(x=pca_centre_datac[,1],
                                 y=pca_centre_datac[,2],
                                 width=0.04,
                                 pie = graph33)
   }
 
 
-  final_plot <- ggplot2::ggplot(res_to_plot, aes(PC1,PC2)) +
-    geom_point(aes(colour=group2, size=(1-uncert),alpha=uncert)) +
-    geom_text_repel(label=res_to_plot$name_long2, nudge_x = width_nudge, nudge_y = width_nudge, parse = TRUE, max.overlaps = 30) +
-    geom_point(data=centroids,aes(x=PC1,y=PC2), shape=15) +
-    ggimage::geom_subview(aes(x=x, y=y, subview=pie, width=width, height=width), data=pca_centre_data2) +
-    see::theme_modern() + xlab(paste0("PC1 (",round(kmeans_res[[3]][1]*100,1)," %)")) +
-    ylab(paste0("PC2 (",round(kmeans_res[[3]][2]*100,1)," %)")) +
-    xlim(c(min(kmeans_res[[1]]$PC1)-(max(kmeans_res[[1]]$PC1)-min(kmeans_res[[1]]$PC1))/5,
+  final_plot <- ggplot2::ggplot(res_to_plot, ggplot2::aes(PC1,PC2)) +
+    ggplot2::geom_point(ggplot2::aes(colour=group2, size=(1-uncert),alpha=uncert)) +
+    ggrepel::geom_text_repel(label=res_to_plot$name_long2, nudge_x = width_nudge, nudge_y = width_nudge, parse = TRUE, max.overlaps = 30) +
+    ggplot2::geom_point(data=centroids,ggplot2::aes(x=PC1,y=PC2), shape=15) +
+    ggimage::geom_subview(ggplot2::aes(x=x, y=y, subview=pie, width=width, height=width), data=pca_centre_data2) +
+    see::theme_modern() + ggplot2::xlab(paste0("PC1 (",round(kmeans_res[[3]][1]*100,1)," %)")) +
+    ggplot2::ylab(paste0("PC2 (",round(kmeans_res[[3]][2]*100,1)," %)")) +
+    ggplot2::xlim(c(min(kmeans_res[[1]]$PC1)-(max(kmeans_res[[1]]$PC1)-min(kmeans_res[[1]]$PC1))/5,
            max(kmeans_res[[1]]$PC1)+(max(kmeans_res[[1]]$PC1)-min(kmeans_res[[1]]$PC1))/5))+
-    ylim(c(min(kmeans_res[[1]]$PC2)-(max(kmeans_res[[1]]$PC2)-min(kmeans_res[[1]]$PC2))/5,
+    ggplot2::ylim(c(min(kmeans_res[[1]]$PC2)-(max(kmeans_res[[1]]$PC2)-min(kmeans_res[[1]]$PC2))/5,
            max(kmeans_res[[1]]$PC2)+(max(kmeans_res[[1]]$PC2)-min(kmeans_res[[1]]$PC2))/5))+
-    theme(legend.position='none')
+    ggplot2::theme(legend.position='none')
 
   if(length(kmeans_res[[3]])>2){
 
-    final_plot2 <- ggplot2::ggplot(res_to_plot, aes(PC1,PC3)) +
-      geom_point(aes(colour=group2, size=(1-uncert),alpha=uncert)) +
-      geom_text_repel(label=res_to_plot$name_long2, nudge_x = width_nudge, nudge_y = width_nudge, parse = TRUE, max.overlaps = 30) +
-      geom_point(data=centroids,aes(x=PC1,y=PC3), shape=15) +
-      ggimage::geom_subview(aes(x=x, y=y, subview=pie, width=width, height=width), data=pca_centre_data2b) +
-      see::theme_modern() + xlab(paste0("PC1 (",round(kmeans_res[[3]][1]*100,1)," %)")) +
-      ylab(paste0("PC3 (",round(kmeans_res[[3]][3]*100,1)," %)")) +
-      xlim(c(min(kmeans_res[[1]]$PC1)-(max(kmeans_res[[1]]$PC1)-min(kmeans_res[[1]]$PC1))/5,
+    final_plot2 <- ggplot2::ggplot(res_to_plot, ggplot2::aes(PC1,PC3)) +
+      ggplot2::geom_point(ggplot2::aes(colour=group2, size=(1-uncert),alpha=uncert)) +
+      ggrepel::geom_text_repel(label=res_to_plot$name_long2, nudge_x = width_nudge, nudge_y = width_nudge, parse = TRUE, max.overlaps = 30) +
+      ggplot2::geom_point(data=centroids,ggplot2::aes(x=PC1,y=PC3), shape=15) +
+      ggimage::geom_subview(ggplot2::aes(x=x, y=y, subview=pie, width=width, height=width), data=pca_centre_data2b) +
+      see::theme_modern() + ggplot2::xlab(paste0("PC1 (",round(kmeans_res[[3]][1]*100,1)," %)")) +
+      ggplot2::ylab(paste0("PC3 (",round(kmeans_res[[3]][3]*100,1)," %)")) +
+      ggplot2::xlim(c(min(kmeans_res[[1]]$PC1)-(max(kmeans_res[[1]]$PC1)-min(kmeans_res[[1]]$PC1))/5,
              max(kmeans_res[[1]]$PC1)+(max(kmeans_res[[1]]$PC1)-min(kmeans_res[[1]]$PC1))/5))+
-      ylim(c(min(kmeans_res[[1]]$PC3)-(max(kmeans_res[[1]]$PC3)-min(kmeans_res[[1]]$PC3))/5,
+      ggplot2::ylim(c(min(kmeans_res[[1]]$PC3)-(max(kmeans_res[[1]]$PC3)-min(kmeans_res[[1]]$PC3))/5,
              max(kmeans_res[[1]]$PC3)+(max(kmeans_res[[1]]$PC3)-min(kmeans_res[[1]]$PC3))/5))+
-      theme(legend.position='none')
+      ggplot2::theme(legend.position='none')
 
-    final_plot3 <- ggplot2::ggplot(res_to_plot, aes(PC2,PC3)) +
-      geom_point(aes(colour=group2, size=(1-uncert),alpha=uncert)) +
-      geom_text_repel(label=res_to_plot$name_long2, nudge_x = width_nudge, nudge_y = width_nudge, parse = TRUE, max.overlaps = 30) +
-      geom_point(data=centroids,aes(x=PC2,y=PC3), shape=15) +
+    final_plot3 <- ggplot2::ggplot(res_to_plot, ggplot2::aes(PC2,PC3)) +
+      ggplot2::geom_point(aes(colour=group2, size=(1-uncert),alpha=uncert)) +
+      ggrepel::geom_text_repel(label=res_to_plot$name_long2, nudge_x = width_nudge, nudge_y = width_nudge, parse = TRUE, max.overlaps = 30) +
+      ggplot2::geom_point(data=centroids,ggplot2::aes(x=PC2,y=PC3), shape=15) +
       ggimage::geom_subview(aes(x=x, y=y, subview=pie, width=width, height=width), data=pca_centre_data2c) +
-      see::theme_modern() + xlab(paste0("PC2 (",round(kmeans_res[[3]][2]*100,1)," %)")) +
-      ylab(paste0("PC3 (",round(kmeans_res[[3]][3]*100,1)," %)")) +
-      xlim(c(min(kmeans_res[[1]]$PC2)-(max(kmeans_res[[1]]$PC2)-min(kmeans_res[[1]]$PC2))/5,
+      see::theme_modern() + ggplot2::xlab(paste0("PC2 (",round(kmeans_res[[3]][2]*100,1)," %)")) +
+      ggplot2::ylab(paste0("PC3 (",round(kmeans_res[[3]][3]*100,1)," %)")) +
+      ggplot2::xlim(c(min(kmeans_res[[1]]$PC2)-(max(kmeans_res[[1]]$PC2)-min(kmeans_res[[1]]$PC2))/5,
              max(kmeans_res[[1]]$PC2)+(max(kmeans_res[[1]]$PC2)-min(kmeans_res[[1]]$PC2))/5))+
-      ylim(c(min(kmeans_res[[1]]$PC3)-(max(kmeans_res[[1]]$PC3)-min(kmeans_res[[1]]$PC3))/5,
+      ggplot2::ylim(c(min(kmeans_res[[1]]$PC3)-(max(kmeans_res[[1]]$PC3)-min(kmeans_res[[1]]$PC3))/5,
              max(kmeans_res[[1]]$PC3)+(max(kmeans_res[[1]]$PC3)-min(kmeans_res[[1]]$PC3))/5))+
-      theme(legend.position='none')
+      ggplot2::theme(legend.position='none')
 
   }else{
     final_plot2 <- final_plot3 <- NA

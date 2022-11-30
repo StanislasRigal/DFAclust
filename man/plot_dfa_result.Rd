@@ -19,7 +19,8 @@ plot_dfa_result(
   nfac,
   group_dfa,
   nT,
-  min_year
+  min_year,
+  species_name_ordre
 )
 }
 \arguments{
@@ -52,6 +53,8 @@ plot_dfa_result(
 \item{nT}{An \code{integer}. Number of time steps.}
 
 \item{min_year}{An \code{integer}. First year of time-series.}
+
+\item{species_name_ordre}{A \verb{character vector}. Species code following the order of \code{data_ts}.}
 }
 \value{
 A \code{list} of 13 objects: \code{data_to_plot_sp} data on species time-series and fit, \code{data_to_plot_tr} Data on latent trends, \code{data_loadings} Data on factor loadings, \code{exp_var_lt} Data on \% of variance of species ts explained by latent trends, \code{plot_sp} Plot of species time-series and fit, \code{plot_tr} Plot of latent trends, \code{plot_ld} Plot of factor loadings, \code{plot_perc_var} Plot of \% of variance of species ts explained by latent trends, \code{plot_sp_group} Plot clusters in factorial plan, \code{plot_group_ts} Plot clustertime-series, \code{plot_group_ts2} Plot clustertime-series from sdRep, \code{trend_group} Cluster barycentre times-series, \code{trend_group2} Cluster barycentre times-series from sdRep.
@@ -60,7 +63,6 @@ A \code{list} of 13 objects: \code{data_to_plot_sp} data on species time-series 
 Plot DFAclust results
 }
 \examples{
-\dontrun{
 data(species_ts_mat)
 data(species_uncert_ts_mat)
 
@@ -77,12 +79,11 @@ data(species_name)
 cluster_result <- cluster_dfa(data_loadings = dfa_result$data_loadings,
 cov_mat_Z = dfa_result$cov_mat_Z, species_sub = species_name,
 nboot = 500, ny = dfa_result$ny, nfac = dfa_result$nfac,
-data_ts = dfa_result$data_ts)
+data_ts = dfa_result$data_ts, tmbObj = dfa_result$tmbObj)
 
 dfa_result_plot <- plot_dfa_result(data_ts_save = dfa_result$data_ts_save, data_ts_se_save = dfa_result$data_ts_se_save, data_ts_save_long = dfa_result$data_ts_save_long,
-data_ts = dfa_result=data_ts, data_ts_se = dfa_result$data_ts_se, sdRep = cluster_result$sdRep,
+data_ts = dfa_result$data_ts, data_ts_se = dfa_result$data_ts_se, sdRep = cluster_result$sdRep,
 ny = dfa_result$ny, species_sub = species_name, x_hat = dfa_result$x_hat, x_hat_se = dfa_result$x_hat_se,
 Z_hat = dfa_result$Z_hat, nfac = dfa_result$nfac, group_dfa = cluster_result$group_dfa,
-nT = dfa_result$nT, min_year = data_ready_dfa$min_year)
-}
+nT = dfa_result$nT, min_year = data_ready_dfa$min_year, species_name_ordre = data_ready_dfa$species_name_ordre)
 }
