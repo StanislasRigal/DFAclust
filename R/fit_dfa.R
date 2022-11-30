@@ -18,6 +18,9 @@
 #' @export
 #' @importFrom graphics pie
 #' @importFrom stats complete.cases dist kmeans lm na.omit nlminb optim prcomp rnorm runif sd setNames varimax weighted.mean
+#' @importFrom graphics par
+#' @importFrom methods new
+#' @importFrom stats as.dist cov cutree hclust median var
 #'
 #' @examples
 #' \dontrun{
@@ -126,34 +129,8 @@ fit_dfa <- function(data_ts,
   data_loadings <- reshape2::melt(data.frame(code_sp=data_ts_save[,1],Z_hat_orig),
                         id.vars="code_sp")
 
-  # Definition of fit_dfa class
-
-  methods::setOldClass("sdreport")
-
-  methods::setClass("fit_dfa", slots=list(tmbObj = "list",
-                                          tmbOpt = "list",
-                                          data_ts = "matrix",
-                                          data_ts_se = "matrix",
-                                          data_ts_save = "data.frame",
-                                          data_ts_save_long = "data.frame",
-                                          data_ts_se_save = "data.frame",
-                                          nfac = "numeric",
-                                          ny = "integer",
-                                          nT = "integer",
-                                          aic = "numeric",
-                                          conv = "integer",
-                                          sdRep_test = "matrix",
-                                          sdRep_test_all = "sdreport",
-                                          x_hat = "matrix",
-                                          x_hat_se = "matrix",
-                                          Z_hat = "matrix",
-                                          Z_hat_orig = "matrix",
-                                          Z_hat_se = "matrix",
-                                          cov_mat_Z = "matrix",
-                                          data_loadings = "data.frame"))
-
   # creating an object using new() by passing class name and slot values
-  fit_dfa_result <- new("fit_dfa", tmbObj = tmbObj,
+  fit_dfa_result <- methods::new("fit_dfa", tmbObj = tmbObj,
                         tmbOpt = tmbOpt,
                         data_ts = data_ts,
                         data_ts_se = data_ts_se,

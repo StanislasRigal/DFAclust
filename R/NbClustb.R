@@ -1,4 +1,4 @@
-#' Clustering function removing the buggy Beale index from NbClust
+#' Clustering function removing the buggy Beale index from NbClust (internal function)
 #'
 #' @param data matrix or dataset.
 #' @param diss dissimilarity matrix to be used. By default, diss=NULL, but if it is replaced by a dissimilarity matrix, distance should be "NULL".
@@ -13,9 +13,7 @@
 #' All.CriticalValues	Critical values of some indices for each partition obtained with a number of clusters between min.nc and max.nc.
 #' Best.nc Best number of clusters proposed by each index and the corresponding index value.
 #' Best.partition	Partition that corresponds to the best number of clusters
-#' @export
 #'
-#' @examples
 NbClustb <- function (data = NULL, diss = NULL, distance = "euclidean", min.nc = 2,
                       max.nc = 15, method = NULL, index = "all", alphaBeale = 0.1)
 {

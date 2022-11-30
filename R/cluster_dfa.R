@@ -69,7 +69,7 @@ cluster_dfa <- function(data_dfa,
 
   # Recalcul sdreport
 
-  sdRep <- summary(sdreport(tmbObj))
+  sdRep <- summary(TMB::sdreport(tmbObj))
 
   return(list(group_dfa = group_dfa,
               tmbObj = tmbObj,

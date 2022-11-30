@@ -2,7 +2,7 @@
 % Please edit documentation in R/NbClustb.R
 \name{NbClustb}
 \alias{NbClustb}
-\title{Clustering function removing the buggy Beale index from NbClust}
+\title{Clustering function removing the buggy Beale index from NbClust (internal function)}
 \usage{
 NbClustb(
   data = NULL,
@@ -39,5 +39,5 @@ Best.nc Best number of clusters proposed by each index and the corresponding ind
 Best.partition	Partition that corresponds to the best number of clusters
 }
 \description{
-Clustering function removing the buggy Beale index from NbClust
+Clustering function removing the buggy Beale index from NbClust (internal function)
 }

@@ -38,22 +38,17 @@ plot_dfa_result <- function(data_dfa,
 
 ){
 
-  data_ts_save = data_dfa$data_ts_save
-  data_ts_se_save = data_dfa$data_ts_se_save
-  data_ts_save_long = data_dfa$data_ts_save_long
-  data_ts = data_dfa$data_ts
-  data_ts_se = data_dfa$data_ts_se
-  sdRep = cluster_result$sdRep
-  ny = data_dfa$ny
-  species_sub = species_name
-  x_hat = data_dfa$x_hat
-  x_hat_se = data_dfa$x_hat_se
-  Z_hat = data_dfa$Z_hat
-  nfac = data_dfa$nfac
-  group_dfa = cluster_result$group_dfa
-  nT = data_dfa$nT
-  min_year = data_ready_dfa$min_year
-  species_name_ordre = data_ready_dfa$species_name_ordre
+  data_ts_save <- data_dfa$data_ts_save
+  data_ts_se_save <- data_dfa$data_ts_se_save
+  data_ts_save_long <- data_dfa$data_ts_save_long
+  data_ts <- data_dfa$data_ts
+  data_ts_se <- data_dfa$data_ts_se
+  ny <- data_dfa$ny
+  x_hat <- data_dfa$x_hat
+  x_hat_se <- data_dfa$x_hat_se
+  Z_hat <- data_dfa$Z_hat
+  nfac <- data_dfa$nfac
+  nT <- data_dfa$nT
 
   # Prepare data to plot
 
@@ -153,7 +148,7 @@ plot_dfa_result <- function(data_dfa,
       ggplot2::geom_pointrange(ggplot2::aes(ymax = value + 1.96 * se.value_exp, ymin=value - 1.96 * se.value_exp)) +
       ggplot2::geom_line(ggplot2::aes(y=pred.value_exp)) +
       ggplot2::geom_ribbon(ggplot2::aes(y=pred.value_exp, ymax = pred.value_exp + 1.96*pred_se.value_exp, ymin=pred.value_exp - 1.96*pred_se.value_exp), alpha=0.5) +
-      ggplot2::facet_wrap(name_long ~ ., ncol=round(sqrt(length(unique(data_to_plot_sp$code_sp)))), scales = "free", labeller = ggplot2::label_bquote(col = italic(.(name_long)))) +
+      ggplot2::facet_wrap(name_long ~ ., ncol=round(sqrt(length(unique(data_to_plot_sp$code_sp)))), scales = "free", labeller = ggplot2::label_bquote(col = ggplot2::italic(plyr::.(name_long)))) +
       see::theme_modern() + ggplot2::theme(axis.title.x = ggplot2::element_blank(), axis.title.y = ggplot2::element_blank())
 
     plot_tr <- ggplot2::ggplot(data_to_plot_tr, ggplot2::aes(x=Year, y=rot_tr.value)) +
@@ -216,14 +211,14 @@ plot_dfa_result <- function(data_dfa,
       see::theme_modern()
 
     plot_ld <- ggplot2::ggplot(data_loadings) +
-      geom_col(ggplot2::aes(value, name_long, fill=variable)) +
+      ggplot2::geom_col(ggplot2::aes(value, name_long, fill=variable)) +
       ggplot2::geom_errorbar(ggplot2::aes(x=value,y=name_long,xmax = value+se.value, xmin=value-se.value), alpha=0.5) +
       ggplot2::facet_wrap(variable ~ ., ncol=4) +
       see::theme_modern() + ggplot2::theme(legend.position = "none")
 
     plot_perc_var <- ggplot2::ggplot(exp_var_lt_long) +
-      geom_col(ggplot2::aes(value, name_long, fill=variable)) +
-      facet_wrap(variable ~ ., ncol=length(unique(exp_var_lt_long$variable))) +
+      ggplot2::geom_col(ggplot2::aes(value, name_long, fill=variable)) +
+      ggplot2::facet_wrap(variable ~ ., ncol=length(unique(exp_var_lt_long$variable))) +
       see::theme_modern() +
       ggplot2::theme(legend.position = "none", axis.title.x = ggplot2::element_blank(), axis.title.y = ggplot2::element_blank(),
             axis.text.x = ggplot2::element_text(angle = 45, hjust = 1), axis.text.y = ggplot2::element_text(face="italic"))

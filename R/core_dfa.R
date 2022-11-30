@@ -1,4 +1,4 @@
-#' Core function running the DFA and compute the AIC for a given number of latent trends
+#' Core function running the DFA and compute the AIC for a given number of latent trends (internal function)
 #'
 #' @param data_ts A `matrix` of species time series. It should be provided as a `matrix` with species time-series in row, species' codes as row names and years as column names.
 #' @param data_ts_se A `matrix` of species of uncertainty (e.g. standard error) of species time series. It should be provided as a `matrix` with log species uncertainty time-series in row, species' codes as row names and years as column names.
@@ -9,7 +9,7 @@
 #' @param center_option An `integer`. Option to handle time-series centered according to the first year (`center_option` = 0) or mean centred (default, `center_option` = 1).
 #'
 #' @return A `list` of 13 objects: `tmbObj` the output of `MakeADFun()`, `tmbOpt` the optimisation from `tmbObj`, `data_ts` the processed `matrix` of species time series, `data_ts_se` the processed `matrix` of time series uncertainty, `data_ts_save` a `data.frame` of input species time series, `data_ts_save_long` a `data.frame` of input species time series in long format, `data_ts_se_save` a `data.frame` of input species uncertainty time series, `ny` the number of time series, `nT` the number of time steps, `aic` the value of the AIC, `conv` the result of the convergence check, `sdRep_test` the summary of the TMB optimisation output, `sdRep_test_all` the complete TMB optimisation output.
-#' @export
+#'
 #'
 #' @examples
 #' \dontrun{

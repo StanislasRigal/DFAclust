@@ -2,7 +2,7 @@
 % Please edit documentation in R/group_from_dfa_boot.R
 \name{group_from_dfa_boot}
 \alias{group_from_dfa_boot}
-\title{Get cluster for DFA results}
+\title{Get cluster for DFA results (internal function)}
 \usage{
 group_from_dfa_boot(
   data_loadings,
@@ -30,7 +30,7 @@ group_from_dfa_boot(
 A \code{cluster_from_dfa} object composed of a list of five objects: \code{kmeans_res} a data.frame containing the results of clustering, \code{centroids} a data.frame with the coordinates of cluster centres, \code{stability_cluster_final} a vector of stability for each cluster, \code{mean_dist_clust} a vector of the mean distance between species and centre for each cluster, \code{pca_centre_list} a list containing coordinates to plot trends of PCA axes.
 }
 \description{
-Get cluster for DFA results
+Get cluster for DFA results (internal function)
 }
 \examples{
 \dontrun{

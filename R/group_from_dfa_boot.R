@@ -1,4 +1,4 @@
-#' Get cluster for DFA results
+#' Get cluster for DFA results (internal function)
 #'
 #' @param data_loadings A `data.frame` of species initial factor loadings.
 #' @param cov_mat_Z A `matrix` corresponding to the covariance matrix of species factor loadings.
@@ -8,7 +8,7 @@
 #' @param nfac An `integer`. Number of latent trends.
 #'
 #' @return A `cluster_from_dfa` object composed of a list of five objects: `kmeans_res` a data.frame containing the results of clustering, `centroids` a data.frame with the coordinates of cluster centres, `stability_cluster_final` a vector of stability for each cluster, `mean_dist_clust` a vector of the mean distance between species and centre for each cluster, `pca_centre_list` a list containing coordinates to plot trends of PCA axes.
-#' @export
+#'
 #'
 #' @examples
 #' \dontrun{
@@ -330,19 +330,10 @@ group_from_dfa_boot <- function(data_loadings,
     row.names(mean_dist_clust) <- paste0("cluster_",1)
   }
 
-  methods::setClass("cluster_from_dfa", slots=list(kmeans_res = "list",
-                                          centroids = "data.frame",
-                                          stability_cluster_final = "numeric",
-                                          mean_dist_clust = "data.frame",
-                                          pca_centre_list = "list"
-                                          ))
 
-  cluster_from_dfa_result <- new("cluster_from_dfa",
-                                 kmeans_res = kmeans_res,
-                                 centroids = centroids,
-                                 stability_cluster_final = stability_cluster_final,
-                                 mean_dist_clust = mean_dist_clust,
-                                 pca_centre_list = pca_centre_list)
-
-  return(cluster_from_dfa_result)
+  return(list(kmeans_res = kmeans_res,
+              centroids = centroids,
+              stability_cluster_final = stability_cluster_final,
+              mean_dist_clust = mean_dist_clust,
+              pca_centre_list = pca_centre_list))
 }

@@ -1,4 +1,4 @@
-#' Plot groups and clustering trends
+#' Plot groups and clustering trends (internal function)
 #'
 #' @param nb_group An `integer`. Number of clusters.
 #' @param centroids A `data.frame`. Position of cluster centres.
@@ -17,7 +17,7 @@
 #' @param species_name_ordre A `character vector`. Species code in the same order as in the input time-series.
 #'
 #' @return A `list` of five objects: `final_plot_list` the plot of species clusters, `graph` the plot of time-series of cluster centres, `data_trend_group` the `data.frame` of time-series of cluster centres, `graph2` the plot of time-series of cluster centres from sdRep, `data_trend_group2` the `data.frame` of time-series of cluster centres from sdRep.
-#' @export
+#'
 #'
 #' @examples
 #' \dontrun{
@@ -274,10 +274,10 @@ plot_group_boot <- function(nb_group,
       ggplot2::theme(legend.position='none')
 
     final_plot3 <- ggplot2::ggplot(res_to_plot, ggplot2::aes(PC2,PC3)) +
-      ggplot2::geom_point(aes(colour=group2, size=(1-uncert),alpha=uncert)) +
+      ggplot2::geom_point(ggplot2::aes(colour=group2, size=(1-uncert),alpha=uncert)) +
       ggrepel::geom_text_repel(label=res_to_plot$name_long2, nudge_x = width_nudge, nudge_y = width_nudge, parse = TRUE, max.overlaps = 30) +
       ggplot2::geom_point(data=centroids,ggplot2::aes(x=PC2,y=PC3), shape=15) +
-      ggimage::geom_subview(aes(x=x, y=y, subview=pie, width=width, height=width), data=pca_centre_data2c) +
+      ggimage::geom_subview(ggplot2::aes(x=x, y=y, subview=pie, width=width, height=width), data=pca_centre_data2c) +
       see::theme_modern() + ggplot2::xlab(paste0("PC2 (",round(kmeans_res[[3]][2]*100,1)," %)")) +
       ggplot2::ylab(paste0("PC3 (",round(kmeans_res[[3]][3]*100,1)," %)")) +
       ggplot2::xlim(c(min(kmeans_res[[1]]$PC2)-(max(kmeans_res[[1]]$PC2)-min(kmeans_res[[1]]$PC2))/5,

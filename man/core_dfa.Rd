@@ -2,7 +2,7 @@
 % Please edit documentation in R/core_dfa.R
 \name{core_dfa}
 \alias{core_dfa}
-\title{Core function running the DFA and compute the AIC for a given number of latent trends}
+\title{Core function running the DFA and compute the AIC for a given number of latent trends (internal function)}
 \usage{
 core_dfa(
   data_ts,
@@ -33,7 +33,7 @@ core_dfa(
 A \code{list} of 13 objects: \code{tmbObj} the output of \code{MakeADFun()}, \code{tmbOpt} the optimisation from \code{tmbObj}, \code{data_ts} the processed \code{matrix} of species time series, \code{data_ts_se} the processed \code{matrix} of time series uncertainty, \code{data_ts_save} a \code{data.frame} of input species time series, \code{data_ts_save_long} a \code{data.frame} of input species time series in long format, \code{data_ts_se_save} a \code{data.frame} of input species uncertainty time series, \code{ny} the number of time series, \code{nT} the number of time steps, \code{aic} the value of the AIC, \code{conv} the result of the convergence check, \code{sdRep_test} the summary of the TMB optimisation output, \code{sdRep_test_all} the complete TMB optimisation output.
 }
 \description{
-Core function running the DFA and compute the AIC for a given number of latent trends
+Core function running the DFA and compute the AIC for a given number of latent trends (internal function)
 }
 \examples{
 \dontrun{

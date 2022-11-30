@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_group_boot.R
 \name{plot_group_boot}
 \alias{plot_group_boot}
-\title{Plot groups and clustering trends}
+\title{Plot groups and clustering trends (internal function)}
 \usage{
 plot_group_boot(
   nb_group,
@@ -57,7 +57,7 @@ plot_group_boot(
 A \code{list} of five objects: \code{final_plot_list} the plot of species clusters, \code{graph} the plot of time-series of cluster centres, \code{data_trend_group} the \code{data.frame} of time-series of cluster centres, \code{graph2} the plot of time-series of cluster centres from sdRep, \code{data_trend_group2} the \code{data.frame} of time-series of cluster centres from sdRep.
 }
 \description{
-Plot groups and clustering trends
+Plot groups and clustering trends (internal function)
 }
 \examples{
 \dontrun{
