@@ -14,7 +14,7 @@
 #' @param silent A `logical` value. `TRUE` silences `MakeADFun()`, `FALSE` does not. Default is `TRUE`.
 #' @param control A `list`. Control option for `MakeADFun()`. Default is list().
 #'
-#' @return A list of 21 objects: `tmbObj` the output of `MakeADFun()`, `tmbOpt` the optimisation from `tmbObj`, `data_ts` the processed `matrix` of species time series, `data_ts_se` the processed `matrix` of time series uncertainty, `data_ts_save` a `data.frame` of input species time series, `data_ts_save_long` a `data.frame` of input species time series in long format, `data_ts_se_save` a `data.frame` of input species uncertainty time series, `nfac` the number of latent trends, `ny` the number of time series, `nT` the number of time steps, `aic` the value of the AIC, `conv` the result of the convergence check, `sdRep_test` the summary of the TMB optimisation output, `sdRep_test_all` the complete TMB optimisation output, `x_hat` estimated latent trends, `x_hat_se` standard error of estimated latent trends, `Z_hat` estimated factor loadings, `Z_hat_orig` initial estimated factor loadings, `Z_hat_se` standard error of estimated factor loadings, `cov_mat_Z` covariance matrix of factor loadings, `data_loadings` `data.frame` of factor loadings.
+#' @return A `fit_dfa` object composed of a list of 21 objects: `tmbObj` the output of `MakeADFun()`, `tmbOpt` the optimisation from `tmbObj`, `data_ts` the processed `matrix` of species time series, `data_ts_se` the processed `matrix` of time series uncertainty, `data_ts_save` a `data.frame` of input species time series, `data_ts_save_long` a `data.frame` of input species time series in long format, `data_ts_se_save` a `data.frame` of input species uncertainty time series, `nfac` the number of latent trends, `ny` the number of time series, `nT` the number of time steps, `aic` the value of the AIC, `conv` the result of the convergence check, `sdRep_test` the summary of the TMB optimisation output, `sdRep_test_all` the complete TMB optimisation output, `x_hat` estimated latent trends, `x_hat_se` standard error of estimated latent trends, `Z_hat` estimated factor loadings, `Z_hat_orig` initial estimated factor loadings, `Z_hat_se` standard error of estimated factor loadings, `cov_mat_Z` covariance matrix of factor loadings, `data_loadings` `data.frame` of factor loadings.
 #' @export
 #' @importFrom graphics pie
 #' @importFrom stats complete.cases dist kmeans lm na.omit nlminb optim prcomp rnorm runif sd setNames varimax weighted.mean
@@ -126,25 +126,55 @@ fit_dfa <- function(data_ts,
   data_loadings <- reshape2::melt(data.frame(code_sp=data_ts_save[,1],Z_hat_orig),
                         id.vars="code_sp")
 
-  return(list(tmbObj = tmbObj,
-              tmbOpt = tmbOpt,
-              data_ts = data_ts,
-              data_ts_se = data_ts_se,
-              data_ts_save = data_ts_save,
-              data_ts_save_long = data_ts_save_long,
-              data_ts_se_save = data_ts_se_save,
-              nfac = nfac,
-              ny = ny,
-              nT = nT,
-              aic = aic,
-              conv = conv,
-              sdRep_test = sdRep_test,
-              sdRep_test_all = sdRep_test_all,
-              x_hat = x_hat,
-              x_hat_se = x_hat_se,
-              Z_hat = Z_hat,
-              Z_hat_orig = Z_hat_orig,
-              Z_hat_se = Z_hat_se,
-              cov_mat_Z = cov_mat_Z,
-              data_loadings = data_loadings))
+  # Definition of fit_dfa class
+
+  methods::setOldClass("sdreport")
+
+  methods::setClass("fit_dfa", slots=list(tmbObj = "list",
+                                          tmbOpt = "list",
+                                          data_ts = "matrix",
+                                          data_ts_se = "matrix",
+                                          data_ts_save = "data.frame",
+                                          data_ts_save_long = "data.frame",
+                                          data_ts_se_save = "data.frame",
+                                          nfac = "numeric",
+                                          ny = "integer",
+                                          nT = "integer",
+                                          aic = "numeric",
+                                          conv = "integer",
+                                          sdRep_test = "matrix",
+                                          sdRep_test_all = "sdreport",
+                                          x_hat = "matrix",
+                                          x_hat_se = "matrix",
+                                          Z_hat = "matrix",
+                                          Z_hat_orig = "matrix",
+                                          Z_hat_se = "matrix",
+                                          cov_mat_Z = "matrix",
+                                          data_loadings = "data.frame"))
+
+  # creating an object using new() by passing class name and slot values
+  fit_dfa_result <- new("fit_dfa", tmbObj = tmbObj,
+                        tmbOpt = tmbOpt,
+                        data_ts = data_ts,
+                        data_ts_se = data_ts_se,
+                        data_ts_save = data_ts_save,
+                        data_ts_save_long = data_ts_save_long,
+                        data_ts_se_save = data_ts_se_save,
+                        nfac = nfac,
+                        ny = ny,
+                        nT = nT,
+                        aic = aic,
+                        conv = conv,
+                        sdRep_test = sdRep_test,
+                        sdRep_test_all = sdRep_test_all,
+                        x_hat = x_hat,
+                        x_hat_se = x_hat_se,
+                        Z_hat = Z_hat,
+                        Z_hat_orig = Z_hat_orig,
+                        Z_hat_se = Z_hat_se,
+                        cov_mat_Z = cov_mat_Z,
+                        data_loadings = data_loadings)
+
+
+  return(fit_dfa_result)
 }

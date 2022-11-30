@@ -23,6 +23,7 @@ Imports:
     ggplot2,
     ggrepel,
     magrittr,
+    methods,
     mvtnorm,
     plyr,
     reshape2,

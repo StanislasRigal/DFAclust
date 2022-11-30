@@ -1,15 +1,10 @@
 #' Clustering function to process DFA results.
 #'
-#' @param data_loadings A `data.frame`. Factor loadings and standard error.
-#' @param cov_mat_Z A `matrix`. Covariance matrix of factor loadings.
+#' @param data_dfa A `fit_dfa` object. Results of `fit_dfa()`.
 #' @param species_sub A `data.frame` of species names. It should be provided with species in row, the first column for complete species names and the second column for species names' codes.
-#' @param nboot An `integer`. Number of bootdtrap iterations for clustering. Default is 500.
-#' @param ny An `integer`. Number of time-series.
-#' @param nfac An `integer`. Number of latent trends.
-#' @param data_ts A `matrix` of species time series.
-#' @param tmbObj A `MakeADFun` object. Output of `MakeADFun()`.
+#' @param nboot An `integer`. Number of bootstrap iterations for clustering. Default is 500.
 #'
-#' @return A `list` of five objects: `group_dfa` clustering output, `Z_pred_from_kmeans` factor loadings of clusters, `W_from_kmeans` weight of species time series, `tmbObj` updated output of `MakeADFun()`, `sdRep` updated output of TMB optimisation.
+#' @return A `list` of three objects: `group_dfa` clustering output, `tmbObj` updated output of `MakeADFun()`, `sdRep` updated output of TMB optimisation.
 #' @export
 #'
 #' @examples
@@ -27,20 +22,19 @@
 #'
 #' data(species_name)
 #'
-#' cluster_result <- cluster_dfa(data_loadings = dfa_result$data_loadings,
-#' cov_mat_Z = dfa_result$cov_mat_Z, species_sub = species_name, nboot = 500,
-#' ny = dfa_result$ny, nfac = dfa_result$nfac, data_ts = dfa_result$data_ts,
-#' tmbObj = dfa_result$tmbObj)
+#' cluster_result <- cluster_dfa(data_dfa = dfa_result, species_sub = species_name, nboot = 500)
 #' }
-cluster_dfa <- function(data_loadings,
-                        cov_mat_Z,
+cluster_dfa <- function(data_dfa,
                         species_sub,
-                        nboot = 500,
-                        ny,
-                        nfac,
-                        data_ts,
-                        tmbObj
+                        nboot = 500
                         ){
+
+  data_loadings <- data_dfa$data_loadings
+  cov_mat_Z <- data_dfa$cov_mat_Z
+  ny <- data_dfa$ny
+  nfac <- data_dfa$nfac
+  data_ts <- data_dfa$data_ts
+  tmbObj <- data_dfa$tmbObj
 
   # Run group_from_dfa_boot to obtain species clusters
 
@@ -78,8 +72,6 @@ cluster_dfa <- function(data_loadings,
   sdRep <- summary(sdreport(tmbObj))
 
   return(list(group_dfa = group_dfa,
-              Z_pred_from_kmeans = Z_pred_from_kmeans,
-              W_from_kmeans = W_from_kmeans,
               tmbObj = tmbObj,
               sdRep = sdRep))
 }

@@ -27,7 +27,7 @@ group_from_dfa_boot(
 \item{nfac}{An \code{integer}. Number of latent trends.}
 }
 \value{
-A \code{list} of five objects: \code{kmeans_res} a data.frame containing the results of clustering, \code{centroids} a data.frame with the coordinates of cluster centres, \code{stability_cluster_final} a vector of stability for each cluster, \code{mean_dist_clust} a vector of the mean distance between species and centre for each cluster, \code{pca_centre_list} a list containing coordinates to plot trends of PCA axes.
+A \code{cluster_from_dfa} object composed of a list of five objects: \code{kmeans_res} a data.frame containing the results of clustering, \code{centroids} a data.frame with the coordinates of cluster centres, \code{stability_cluster_final} a vector of stability for each cluster, \code{mean_dist_clust} a vector of the mean distance between species and centre for each cluster, \code{pca_centre_list} a list containing coordinates to plot trends of PCA axes.
 }
 \description{
 Get cluster for DFA results

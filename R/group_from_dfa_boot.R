@@ -7,7 +7,7 @@
 #' @param ny An `integer`. Number of time series.
 #' @param nfac An `integer`. Number of latent trends.
 #'
-#' @return A `list` of five objects: `kmeans_res` a data.frame containing the results of clustering, `centroids` a data.frame with the coordinates of cluster centres, `stability_cluster_final` a vector of stability for each cluster, `mean_dist_clust` a vector of the mean distance between species and centre for each cluster, `pca_centre_list` a list containing coordinates to plot trends of PCA axes.
+#' @return A `cluster_from_dfa` object composed of a list of five objects: `kmeans_res` a data.frame containing the results of clustering, `centroids` a data.frame with the coordinates of cluster centres, `stability_cluster_final` a vector of stability for each cluster, `mean_dist_clust` a vector of the mean distance between species and centre for each cluster, `pca_centre_list` a list containing coordinates to plot trends of PCA axes.
 #' @export
 #'
 #' @examples
@@ -330,11 +330,19 @@ group_from_dfa_boot <- function(data_loadings,
     row.names(mean_dist_clust) <- paste0("cluster_",1)
   }
 
+  methods::setClass("cluster_from_dfa", slots=list(kmeans_res = "list",
+                                          centroids = "data.frame",
+                                          stability_cluster_final = "numeric",
+                                          mean_dist_clust = "data.frame",
+                                          pca_centre_list = "list"
+                                          ))
 
-  return(list(kmeans_res, # Results of clustering
-              centroids, # Position of cluster barycentres
-              stability_cluster_final, # Stability of clusters
-              mean_dist_clust, # Average distance between species and barycentre
-              pca_centre_list # Coordinates to plot trends of PCA axes
-  ))
+  cluster_from_dfa_result <- new("cluster_from_dfa",
+                                 kmeans_res = kmeans_res,
+                                 centroids = centroids,
+                                 stability_cluster_final = stability_cluster_final,
+                                 mean_dist_clust = mean_dist_clust,
+                                 pca_centre_list = pca_centre_list)
+
+  return(cluster_from_dfa_result)
 }

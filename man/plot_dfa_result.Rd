@@ -5,52 +5,22 @@
 \title{Plot DFAclust results}
 \usage{
 plot_dfa_result(
-  data_ts_save,
-  data_ts_se_save,
-  data_ts_save_long,
-  data_ts,
-  data_ts_se,
+  data_dfa,
   sdRep,
-  ny,
   species_sub,
-  x_hat,
-  x_hat_se,
-  Z_hat,
-  nfac,
   group_dfa,
-  nT,
   min_year,
   species_name_ordre
 )
 }
 \arguments{
-\item{data_ts_save}{A \code{data.frame}. Input species time series.}
-
-\item{data_ts_se_save}{A \code{data.frame}. Input uncertainty of species time series.}
-
-\item{data_ts_save_long}{A \code{data.frame}. Input species time series in long format.}
-
-\item{data_ts}{A \code{matrix}. The processed \code{matrix} of species time series.}
-
-\item{data_ts_se}{A \code{matrix}. The processed \code{matrix} of uncertainty of species time series.}
+\item{data_dfa}{A \code{fit_dfa} object. Results of \code{fit_dfa()}.}
 
 \item{sdRep}{A \code{TMB} object. Summary of the TMB optimisation output.}
 
-\item{ny}{An \code{integer}. Number of time series.}
-
 \item{species_sub}{A \code{data.frame} of species names. It should be provided with species in row, the first column for complete species names and the second column for species names' codes.}
 
-\item{x_hat}{A \code{matrix}. Estimated latent trends.}
-
-\item{x_hat_se}{A \code{matrix}. Standard error of estimated latent trends.}
-
-\item{Z_hat}{A \code{matrix}. Estimated factor loadings.}
-
-\item{nfac}{An \code{integer}. Number of latent trends.}
-
 \item{group_dfa}{A \code{list}. Clustering output.}
-
-\item{nT}{An \code{integer}. Number of time steps.}
 
 \item{min_year}{An \code{integer}. First year of time-series.}
 
@@ -76,14 +46,9 @@ center_option = 1, silent = TRUE, control = list())
 
 data(species_name)
 
-cluster_result <- cluster_dfa(data_loadings = dfa_result$data_loadings,
-cov_mat_Z = dfa_result$cov_mat_Z, species_sub = species_name,
-nboot = 500, ny = dfa_result$ny, nfac = dfa_result$nfac,
-data_ts = dfa_result$data_ts, tmbObj = dfa_result$tmbObj)
+cluster_result <- cluster_dfa(data_dfa = dfa_result, species_sub = species_name, nboot = 500)
 
-dfa_result_plot <- plot_dfa_result(data_ts_save = dfa_result$data_ts_save, data_ts_se_save = dfa_result$data_ts_se_save, data_ts_save_long = dfa_result$data_ts_save_long,
-data_ts = dfa_result$data_ts, data_ts_se = dfa_result$data_ts_se, sdRep = cluster_result$sdRep,
-ny = dfa_result$ny, species_sub = species_name, x_hat = dfa_result$x_hat, x_hat_se = dfa_result$x_hat_se,
-Z_hat = dfa_result$Z_hat, nfac = dfa_result$nfac, group_dfa = cluster_result$group_dfa,
-nT = dfa_result$nT, min_year = data_ready_dfa$min_year, species_name_ordre = data_ready_dfa$species_name_ordre)
+dfa_result_plot <- plot_dfa_result(data_dfa = dfa_result, sdRep = cluster_result$sdRep,
+species_sub = species_name, group_dfa = cluster_result$group_dfa,
+min_year = data_ready_dfa$min_year, species_name_ordre = data_ready_dfa$species_name_ordre)
 }

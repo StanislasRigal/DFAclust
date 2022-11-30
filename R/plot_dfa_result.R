@@ -1,19 +1,9 @@
 #' Plot DFAclust results
 #'
-#' @param data_ts_save A `data.frame`. Input species time series.
-#' @param data_ts_se_save A `data.frame`. Input uncertainty of species time series.
-#' @param data_ts_save_long A `data.frame`. Input species time series in long format.
-#' @param data_ts A `matrix`. The processed `matrix` of species time series.
-#' @param data_ts_se A `matrix`. The processed `matrix` of uncertainty of species time series.
+#' @param data_dfa A `fit_dfa` object. Results of `fit_dfa()`.
 #' @param sdRep A `TMB` object. Summary of the TMB optimisation output.
-#' @param ny An `integer`. Number of time series.
 #' @param species_sub A `data.frame` of species names. It should be provided with species in row, the first column for complete species names and the second column for species names' codes.
-#' @param x_hat A `matrix`. Estimated latent trends.
-#' @param x_hat_se A `matrix`. Standard error of estimated latent trends.
-#' @param Z_hat A `matrix`. Estimated factor loadings.
-#' @param nfac An `integer`. Number of latent trends.
 #' @param group_dfa A `list`. Clustering output.
-#' @param nT An `integer`. Number of time steps.
 #' @param min_year An `integer`. First year of time-series.
 #' @param species_name_ordre A `character vector`. Species code following the order of `data_ts`.
 #'
@@ -34,34 +24,37 @@
 #'
 #' data(species_name)
 #'
-#' cluster_result <- cluster_dfa(data_loadings = dfa_result$data_loadings,
-#' cov_mat_Z = dfa_result$cov_mat_Z, species_sub = species_name,
-#' nboot = 500, ny = dfa_result$ny, nfac = dfa_result$nfac,
-#' data_ts = dfa_result$data_ts, tmbObj = dfa_result$tmbObj)
+#' cluster_result <- cluster_dfa(data_dfa = dfa_result, species_sub = species_name, nboot = 500)
 #'
-#' dfa_result_plot <- plot_dfa_result(data_ts_save = dfa_result$data_ts_save, data_ts_se_save = dfa_result$data_ts_se_save, data_ts_save_long = dfa_result$data_ts_save_long,
-#' data_ts = dfa_result$data_ts, data_ts_se = dfa_result$data_ts_se, sdRep = cluster_result$sdRep,
-#' ny = dfa_result$ny, species_sub = species_name, x_hat = dfa_result$x_hat, x_hat_se = dfa_result$x_hat_se,
-#' Z_hat = dfa_result$Z_hat, nfac = dfa_result$nfac, group_dfa = cluster_result$group_dfa,
-#' nT = dfa_result$nT, min_year = data_ready_dfa$min_year, species_name_ordre = data_ready_dfa$species_name_ordre)
-plot_dfa_result <- function(data_ts_save,
-                            data_ts_se_save,
-                            data_ts_save_long,
-                            data_ts,
-                            data_ts_se,
+#' dfa_result_plot <- plot_dfa_result(data_dfa = dfa_result, sdRep = cluster_result$sdRep,
+#' species_sub = species_name, group_dfa = cluster_result$group_dfa,
+#' min_year = data_ready_dfa$min_year, species_name_ordre = data_ready_dfa$species_name_ordre)
+plot_dfa_result <- function(data_dfa,
                             sdRep,
-                            ny,
                             species_sub,
-                            x_hat,
-                            x_hat_se,
-                            Z_hat,
-                            nfac,
                             group_dfa,
-                            nT,
                             min_year,
                             species_name_ordre
 
 ){
+
+  data_ts_save = data_dfa$data_ts_save
+  data_ts_se_save = data_dfa$data_ts_se_save
+  data_ts_save_long = data_dfa$data_ts_save_long
+  data_ts = data_dfa$data_ts
+  data_ts_se = data_dfa$data_ts_se
+  sdRep = cluster_result$sdRep
+  ny = data_dfa$ny
+  species_sub = species_name
+  x_hat = data_dfa$x_hat
+  x_hat_se = data_dfa$x_hat_se
+  Z_hat = data_dfa$Z_hat
+  nfac = data_dfa$nfac
+  group_dfa = cluster_result$group_dfa
+  nT = data_dfa$nT
+  min_year = data_ready_dfa$min_year
+  species_name_ordre = data_ready_dfa$species_name_ordre
+
   # Prepare data to plot
 
   if(!is.character(data_ts_save[,1]) & !is.factor(data_ts_save[,1])){

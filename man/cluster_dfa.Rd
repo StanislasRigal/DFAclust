@@ -4,36 +4,17 @@
 \alias{cluster_dfa}
 \title{Clustering function to process DFA results.}
 \usage{
-cluster_dfa(
-  data_loadings,
-  cov_mat_Z,
-  species_sub,
-  nboot = 500,
-  ny,
-  nfac,
-  data_ts,
-  tmbObj
-)
+cluster_dfa(data_dfa, species_sub, nboot = 500)
 }
 \arguments{
-\item{data_loadings}{A \code{data.frame}. Factor loadings and standard error.}
-
-\item{cov_mat_Z}{A \code{matrix}. Covariance matrix of factor loadings.}
+\item{data_dfa}{A \code{fit_dfa} object. Results of \code{fit_dfa()}.}
 
 \item{species_sub}{A \code{data.frame} of species names. It should be provided with species in row, the first column for complete species names and the second column for species names' codes.}
 
-\item{nboot}{An \code{integer}. Number of bootdtrap iterations for clustering. Default is 500.}
-
-\item{ny}{An \code{integer}. Number of time-series.}
-
-\item{nfac}{An \code{integer}. Number of latent trends.}
-
-\item{data_ts}{A \code{matrix} of species time series.}
-
-\item{tmbObj}{A \code{MakeADFun} object. Output of \code{MakeADFun()}.}
+\item{nboot}{An \code{integer}. Number of bootstrap iterations for clustering. Default is 500.}
 }
 \value{
-A \code{list} of five objects: \code{group_dfa} clustering output, \code{Z_pred_from_kmeans} factor loadings of clusters, \code{W_from_kmeans} weight of species time series, \code{tmbObj} updated output of \code{MakeADFun()}, \code{sdRep} updated output of TMB optimisation.
+A \code{list} of three objects: \code{group_dfa} clustering output, \code{tmbObj} updated output of \code{MakeADFun()}, \code{sdRep} updated output of TMB optimisation.
 }
 \description{
 Clustering function to process DFA results.
@@ -53,9 +34,6 @@ center_option = 1, silent = TRUE, control = list())
 
 data(species_name)
 
-cluster_result <- cluster_dfa(data_loadings = dfa_result$data_loadings,
-cov_mat_Z = dfa_result$cov_mat_Z, species_sub = species_name, nboot = 500,
-ny = dfa_result$ny, nfac = dfa_result$nfac, data_ts = dfa_result$data_ts,
-tmbObj = dfa_result$tmbObj)
+cluster_result <- cluster_dfa(data_dfa = dfa_result, species_sub = species_name, nboot = 500)
 }
 }
