@@ -124,22 +124,30 @@ plot_dfa_result <- function(data_dfa,
     data_loadings <- merge(data_loadings, group_dfa[[1]][[1]][,c("code_sp","PC1")],by="code_sp")
     data_loadings$name_long <- forcats::fct_reorder(data_loadings$name_long,data_loadings$PC1)
 
-    data_loadings$variable <- as.character(data_loadings$variable)
-    data_loadings$variable <- gsub(pattern="X", replacement = "Latent trend ", x = data_loadings$variable)
-    data_loadings$variable <- as.factor(data_loadings$variable)
-
     # Data for % variance of species ts explained by latent trends
 
     exp_var_lt <- data_loadings[,c("variable","value","name_long")]
-    exp_var_lt <- reshape2::dcast(exp_var_lt, name_long~variable, value.var = "value", fun.aggregate = sum)
+    exp_var_lt <- data.frame(reshape2::dcast(exp_var_lt, name_long~variable, value.var = "value", fun.aggregate = sum))
+    for(nfac_num in 1:nfac){
+      for(row_num in 1:ny){
+        exp_var_lt[row_num,paste0("X",nfac_num)] <- var(exp_var_lt[row_num,paste0("X",nfac_num)]*data_to_plot_tr_rot[,paste0("X",nfac_num)])
+      }
+    }
     eta_sp <- data.frame(name_long=species_sub$name_long, eta=sdRep[!grepl("log_re_sp", row.names(sdRep)) & grepl("re_sp", row.names(sdRep)) ,1])
+    eta_sp$eta <- eta_sp$eta*eta_sp$eta
     exp_var_lt <- merge(exp_var_lt,eta_sp, by="name_long", all.x=T)
 
     exp_var_lt$all <- apply(exp_var_lt[,-1],1,function(x){return(sum(abs(x)))})
     exp_var_lt[,2:(ncol(exp_var_lt)-1)] <- exp_var_lt[,2:(ncol(exp_var_lt)-1)]/exp_var_lt$all
     exp_var_lt$name_long <- forcats::fct_reorder(exp_var_lt$name_long,exp_var_lt$eta)
+    names(exp_var_lt)[which(grepl("X",names(exp_var_lt)))] <- paste0("Latent trend ",1:length(which(grepl("X",names(exp_var_lt)))))
+    names(exp_var_lt)[which(names(exp_var_lt)=="eta")] <- "Random noise"
     exp_var_lt_long <- reshape2::melt(exp_var_lt[,1:(ncol(exp_var_lt)-1)])
 
+
+    data_loadings$variable <- as.character(data_loadings$variable)
+    data_loadings$variable <- gsub(pattern="X", replacement = "Latent trend ", x = data_loadings$variable)
+    data_loadings$variable <- as.factor(data_loadings$variable)
 
     # Plots
 
