@@ -1,9 +1,8 @@
-#' Compute AIC of DFA models
+#' Compute AIC of DFA models (internal function)
 #'
 #' @param obj A tmb object from MakeADFun(). Only works if obj has been already optimized.
 #'
 #' @return A numeric value corresponding to the AIC, computed excluding zero variance.
-#' @export
 #'
 #' @examples
 #' \dontrun{
