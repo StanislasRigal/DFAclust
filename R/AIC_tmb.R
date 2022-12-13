@@ -1,4 +1,4 @@
-#' Compute AIC of DFA models (internal function)
+#' Compute AIC of DFA models (internal function).
 #'
 #' @param obj A tmb object from MakeADFun(). Only works if obj has been already optimized.
 #'
