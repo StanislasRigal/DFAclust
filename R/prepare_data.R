@@ -3,7 +3,8 @@
 #' @param data_ts  A `matrix`. Dataset of species time series. It should be provided as a matrix with species time-series in row, species' codes as row names and years as column names.
 #' @param data_ts_se A `matrix`. Dataset of uncertainty (e.g. standard error) of species time series. It should be provided as a matrix with log uncertainty of species time-series in row, species' codes as row names and years as column names.
 #' @param se_log A `logical` value. `TRUE` if `data_ts_se` is provided with log values. `FALSE` if it is provided with not log values. Default is `TRUE`.
-#' @param perc_replace A `numeric` value. Proportion of the average index value used to replace zeros. Default is `0.01`.
+#' @param perc_replace A `numeric` value. Proportion of the average index value used to replace zeros. Default is `0.01`. It is also possible to replace zeros by `NA` which are ignored during the likelihood computation.
+#' @param standardise A `logical` value. `TRUE` to standardise `data_ts`, `FALSE` otherwise. Default is `FALSE`.
 #'
 #' @return A `list` of five objects: `min_year` an `integer` corresponding to the first year of time-series, `max_year` an `integer` corresponding to the last year of time-series, `species_name_ordre` a `character vector` of species code following the ordre of `data_ts`, `data_ts` a `matrix` with ready-to-use time-series for DFA (`fun_make_dfa()`), `data_ts_se` a `matrix` with ready-to-use uncertainty for DFA (`fun_make_dfa()`).
 #' @export
@@ -13,11 +14,12 @@
 #' data(species_uncert_ts_mat)
 #'
 #' data_ready_dfa <- prepare_data(data_ts = species_ts_mat,data_ts_se = species_uncert_ts_mat,
-#' se_log = TRUE, perc_replace = 0.01)
+#' se_log = TRUE, perc_replace = 0.01, standardise = FALSE)
 prepare_data <- function(data_ts,
                          data_ts_se,
                          se_log = TRUE,
-                         perc_replace = 0.01
+                         perc_replace = 0.01,
+                         standardise = FALSE
                          ){
   # Save first and last years for plot
 
@@ -66,7 +68,15 @@ prepare_data <- function(data_ts,
         data_ts_se[zero_index[i,1],zero_index[i,2]] <- 0
       }
     }
- }
+  }
+
+  if(standardise == TRUE){
+    for(i in 1:nrow(data_ts)){
+      mu_x <- mean(data_ts[i,],na.rm=TRUE)
+      data_ts[i,] <- data_ts[i,]/mu_x
+      data_ts_se[i,] <- data_ts_se[i,]/mu_x # approximation via Taylor expansion
+    }
+  }
 
   return(list(
     min_year = min_year,
