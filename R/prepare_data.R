@@ -3,7 +3,7 @@
 #' @param data_ts  A `matrix`. Dataset of species time series. It should be provided as a matrix with species time-series in row, species' codes as row names and years as column names.
 #' @param data_ts_se A `matrix`. Dataset of uncertainty (e.g. standard error) of species time series. It should be provided as a matrix with log uncertainty of species time-series in row, species' codes as row names and years as column names.
 #' @param se_log A `logical` value. `TRUE` if `data_ts_se` is provided with log values. `FALSE` if it is provided with not log values. Default is `TRUE`.
-#' @param perc_replace A `numeric` value. Proportion of the average index value used to replace zeros. Default is `0.01`. It is also possible to replace zeros by `NA` which are ignored during the likelihood computation.
+#' @param perc_replace A `numeric` value. Proportion of the average index value used to replace zeros. Default is `0.01`.
 #'
 #' @return A `list` of five objects: `min_year` an `integer` corresponding to the first year of time-series, `max_year` an `integer` corresponding to the last year of time-series, `species_name_ordre` a `character vector` of species code following the ordre of `data_ts`, `data_ts` a `matrix` with ready-to-use time-series for DFA (`fun_make_dfa()`), `data_ts_se` a `matrix` with ready-to-use uncertainty for DFA (`fun_make_dfa()`).
 #' @export
