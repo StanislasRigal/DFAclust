@@ -114,6 +114,17 @@ plot_dfa_result <- function(data_dfa,
     data_to_plot_tr$variable <- gsub(pattern="X", replacement = "Latent trend ", x=data_to_plot_tr$variable)
     data_to_plot_tr$variable <- as.factor(data_to_plot_tr$variable)
 
+    # Add mean-centred trends
+
+    x_mc_ts <- sdRep[rownames(sdRep)=="x_mc",]
+
+    x_mc_ts <- data.frame(x_mc_ts = x_mc_ts[,1],
+                          x_mc_sd = x_mc_ts[,2],
+                          x_mc_id = paste0("Latent trend ",rep(1:nfac,nT)),
+                          x_mc_year = sort(rep(min(data_to_plot_sp$Year):max(data_to_plot_sp$Year),nfac)))
+
+    data_to_plot_tr <- merge(data_to_plot_tr, x_mc_ts, by.x=c("variable","Year"), by.y=c("x_mc_id","x_mc_year"), all.x=TRUE)
+
     # Data for species loadings
 
     data_loadings <- cbind(reshape2::melt(data.frame(code_sp=data_ts_save[,1],
@@ -160,8 +171,14 @@ plot_dfa_result <- function(data_dfa,
       see::theme_modern() + ggplot2::theme(axis.title.x = ggplot2::element_blank(), axis.title.y = ggplot2::element_blank())
 
     plot_tr <- ggplot2::ggplot(data_to_plot_tr, ggplot2::aes(x=Year, y=rot_tr.value)) +
-      ggplot2::geom_line(ggplot2::aes(colour=variable)) + ggplot2::ylab("Rotated value") +
+      ggplot2::geom_line(ggplot2::aes(colour=variable)) + ggplot2::ylab("Rotated values") +
       ggplot2::geom_ribbon(ggplot2::aes(ymax = (rot_tr.value+1.96*se.value), ymin=(rot_tr.value-1.96*se.value), fill=variable), alpha=0.1) +
+      ggplot2::facet_wrap(variable ~ ., ncol=min(3,length(unique(data_to_plot_tr$variable)))) +
+      see::theme_modern() + ggplot2::theme(legend.position = "none")
+
+    plot_tr_mc <- ggplot2::ggplot(data_to_plot_tr, ggplot2::aes(x=Year, y=x_mc_ts)) +
+      ggplot2::geom_line(ggplot2::aes(colour=variable)) + ggplot2::ylab("Mean-centred values") +
+      ggplot2::geom_ribbon(ggplot2::aes(ymax = (x_mc_ts+1.96*x_mc_sd), ymin=(x_mc_ts-1.96*x_mc_sd), fill=variable), alpha=0.1) +
       ggplot2::facet_wrap(variable ~ ., ncol=min(3,length(unique(data_to_plot_tr$variable)))) +
       see::theme_modern() + ggplot2::theme(legend.position = "none")
 
@@ -184,6 +201,19 @@ plot_dfa_result <- function(data_dfa,
 
     data_to_plot_tr <- cbind(reshape2::melt(data_to_plot_tr, id.vars = "Year"),
                              se=reshape2::melt(data_to_plot_tr_se, id.vars = "Year")[,3])
+
+    data_to_plot_tr$variable <- "Latent trend 1"
+
+    # Add mean-centred trends
+
+    x_mc_ts <- sdRep[rownames(sdRep)=="x_mc",]
+
+    x_mc_ts <- data.frame(x_mc_ts = x_mc_ts[,1],
+                          x_mc_sd = x_mc_ts[,2],
+                          x_mc_id = "Latent trend 1",
+                          x_mc_year = sort(rep(min(data_to_plot_sp$Year):max(data_to_plot_sp$Year),nfac)))
+
+    data_to_plot_tr <- merge(data_to_plot_tr, x_mc_ts, by.x=c("variable","Year"), by.y=c("x_mc_id","x_mc_year"), all.x=TRUE)
 
     # Data for species loadings
 
@@ -217,6 +247,12 @@ plot_dfa_result <- function(data_dfa,
     plot_tr <- ggplot2::ggplot(data_to_plot_tr, ggplot2::aes(x=Year, y=value)) +
       ggplot2::geom_line(ggplot2::aes(colour=variable))+
       see::theme_modern()
+
+    plot_tr_mc <- ggplot2::ggplot(data_to_plot_tr, ggplot2::aes(x=Year, y=x_mc_ts)) +
+      ggplot2::geom_line(ggplot2::aes(colour=variable)) + ggplot2::ylab("Mean-centred values") +
+      ggplot2::geom_ribbon(ggplot2::aes(ymax = (x_mc_ts+1.96*x_mc_sd), ymin=(x_mc_ts-1.96*x_mc_sd), fill=variable), alpha=0.1) +
+      ggplot2::facet_wrap(variable ~ ., ncol=min(3,length(unique(data_to_plot_tr$variable)))) +
+      see::theme_modern() + ggplot2::theme(legend.position = "none")
 
     plot_ld <- ggplot2::ggplot(data_loadings) +
       ggplot2::geom_col(ggplot2::aes(value, name_long, fill=variable)) +
@@ -291,12 +327,12 @@ plot_dfa_result <- function(data_dfa,
               data_loadings = data_loadings, # Data on factor loadings
               exp_var_lt = exp_var_lt, # Data on % of variance of species ts explained by latent trends
               plot_sp = plot_sp, # Plot of species time-series and fit
-              plot_tr = plot_tr, # Plot of latent trends
+              plot_tr = plot_tr_mc, # Plot of latent trends (mean-centred)
               plot_ld = plot_ld, # Plot of factor loadings
               plot_perc_var = plot_perc_var, # Plot of % of variance of species ts explained by latent trends
               plot_sp_group = plot_sp_group, # Plot clusters in factorial plan
-              plot_group_ts = plot_group_ts, # Plot clustertime-series
-              plot_group_ts2 = plot_group_ts2, # Plot clustertime-series from sdRep
+              plot_group_ts = plot_group_ts, # Plot cluster time-series
+              plot_group_ts2 = plot_group_ts2, # Plot cluster time-series from sdRep
               sdRep = sdRep, # Optimisation output
               group = group_dfa, # Cluster results
               trend_group = trend_group, # Cluster barycentre times-series

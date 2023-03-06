@@ -41,6 +41,9 @@ template<class Type>
   matrix<Type> x_mean(x.rows(), 1);
   x_mean.setZero();
 
+  // Mean-centred latent trends
+  matrix<Type> x_mc(x.rows(), x.cols());
+
   // Matrix to hold predicted species trends
   matrix<Type> x_sp(nSp, nT);
 
@@ -72,6 +75,14 @@ template<class Type>
         }
       }
     }
+
+    // Mean-centred random walks
+    for(int t = 0; t < nT; ++t){
+      for(int f = 0; f < x.rows(); ++f){
+        x_mc(f, t) = (x(f,t)-x_mean(f));
+      }
+    }
+
 
   // Species trends
   for(int i = 0; i < nSp; ++i) {
@@ -123,6 +134,7 @@ template<class Type>
   ADREPORT(x_pred);
   ADREPORT(x_pred2);
   ADREPORT(Z_pred);
+  ADREPORT(x_mc);
 
   // Report simulated values
   //SIMULATE{
