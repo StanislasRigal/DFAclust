@@ -1,0 +1,412 @@
+---
+title: "vignette-DFAclust"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{vignette-DFAclust}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  eval = FALSE,
+  echo = TRUE,
+  comment = "#>"
+)
+```
+
+### Load R package
+
+```{r setup}
+library(DFAclust)
+```
+
+### Reproducible time series
+
+Let simulate some data. Here we will create time-series for 15 species with 20 time-steps and simulate time-series of observation errors for each species as well. We start by simulating 4 latent trends, then we create sets of factor loadings from 2 simulated cluster centres which we will built and finally using simulated latent trends and factor loading we obtain simulated time-series. Normally you will already have your data.
+
+#### Set parameters
+
+```{r}
+
+seed_id <- 0 # starting seed
+
+id_vec <- c() # vector of species id
+
+n_sp_init <- 15 # number of species time series
+
+nb_group_exp <- 2 # number of expected clusters
+
+cum_perc <- c(10,5) # distribution of species among clusters
+
+n_y <- 20 # number of time steps
+
+n_lt <- 4 # number of latent trends
+
+```
+
+#### Simulate latent trends
+
+```{r}
+
+y_init <- data.frame(t(rep(NA,n_y))) 
+
+for(i in 1:n_lt){
+
+    set.seed(i+10)
+
+    y_ts <- c()
+
+    y_ts[1] <- rnorm(n = 1, mean = 0, sd = 1)
+
+    for (t in 2:n_y) {
+
+        r.w <- rnorm(n = 1, mean = 0, sd = 1)
+
+        y_ts[t] <- y_ts[t - 1] + r.w
+
+    }
+
+    y_ts <- y_ts + abs(min(y_ts))+1
+
+    y_ts <- exp(scale(log(y_ts)))
+
+    y_init[i,] <- y_ts
+
+}
+
+```
+
+#### Simulate cluster centres
+
+```{r}
+
+for(g in 1:nb_group_exp){
+    
+    nb_sp_g <- cum_perc[g]
+    
+    assign(paste0("nb_sp_g",g),nb_sp_g)
+    
+    id_vec <- c(id_vec,rep(g,nb_sp_g))
+    
+    for(lt in 1:n_sp_init){
+    
+        seed_id <- seed_id + 1
+    
+        set.seed(seed_id)
+    
+        mean_u_g <- runif(1, -1, 1)
+    
+        lf_u_g <- rnorm(nb_sp_g, mean_u_g, 0.1)
+    
+        assign(paste0("mean_u",lt,"_g",g),mean_u_g) # mean of loading factors in group g for latend trend lt
+        
+        assign(paste0("lf_u",lt,"_g",g),lf_u_g) # loading factors for each ts of group g for latend trend lt
+
+    }
+}
+
+id_vec <- id_vec[1:n_sp_init]
+
+```
+
+#### Simulate species time series
+
+```{r}
+
+y <- data.frame(t(rep(NA,(n_y+2))))
+
+obs_se <- data.frame(t(rep(NA,(n_y+1))))
+
+for(i in 1:n_sp_init){ # get simulated ts from loadings
+    
+    set.seed(i)
+    
+    noise <- rnorm(n_y,0,0.01)
+    
+    y[i,1] <- obs_se[i,1] <- sprintf("SP%03d",i)
+    
+    y_ts <- rep(0,n_y)
+    
+    g <- id_vec[i]
+    
+    i_g <- which(which(id_vec==g)==i) # new index for i in group g
+    
+    for(lt in 1:n_lt){
+    
+        lf_u_g <- get(paste0("lf_u",lt,"_g",g))
+    
+        y_ts <- y_ts + as.numeric(y_init[lt,])*lf_u_g[i_g]
+    
+    }
+    
+    y_ts <- y_ts + noise
+    
+    y_ts <- y_ts + abs(min(y_ts)) + 1
+    
+    y_ts <- exp(scale(log(y_ts)))
+    
+    y[i,2:(n_y+1)] <- y_ts
+    
+    y[i,(n_y+2)] <- id_vec[i]
+    
+    obs_se[i,2:(n_y+1)] <- abs(rnorm(n_y,0,0.1))
+    
+    obs_se[obs_se>1] <- 1
+}  
+
+
+```
+
+#### Specify data in the right format
+
+Three datasets should be provided for the analysis:
+
+- `y_ts_mat` a matrix of species time-series in rows and years in columns, with species names' codes as row names and years as column names.
+- `y_uncert_ts` a matrix of uncertainty in species time-series in rows and years in columns, with species names' codes as row names and years as column names.
+- `species_name_ex` a dataset with two columns, one for species names and the other for species names' codes.
+
+```{r}
+
+y_ts_mat <- as.matrix(y[,2:(n_y+1)]) # species time series
+
+y_uncert_ts <- as.matrix(obs_se[,2:(n_y+1)]) # observation error on time series
+
+colnames(y_ts_mat) <- colnames(y_uncert_ts) <- c(1998:(1998+n_y-1)) # add years as column names
+
+rownames(y_ts_mat) <- rownames(y_uncert_ts) <- y$X1 # add species names as row names
+
+species_name_ex <- data.frame(name_long=sprintf("species %03d",1:nrow(y_ts_mat)), code_sp=y$X1) # species names and code
+
+```
+
+### Data specification
+
+Data format and completeness can be check using the function `prepare_data`. This is not a mandatory step, but it is highly recommended before using the function `fit_dfa` to run the DFA analysis. It checks for missing values and zeros in the species time-series and observation error time-series. `perc_replace` correspond to the proportion of the average index value used to replace zeros in species time-series with `0.01` as default value (1 %). It can also transform the observation error time-series to get their log values if they are initially not in log values (in that case set `se_log` to `TRUE`).
+
+```{r}
+
+data_ready_dfa <- prepare_data(data_ts = y_ts_mat,data_ts_se = y_uncert_ts, se_log = TRUE, perc_replace = 0.01)
+
+```
+
+### Run the DFA analysis
+
+To run the DFA, there are several options. `nfac` corresponds to th enumber of latent trends. It can be specified by the user but the default is 0 to look for the optimal number of latent trends between `mintrend` and `maxtrend`. `center_option` allows to handle time-series centered according to the first year (`center_option` = 0) or mean-centred, which is the default (`center_option` = 1). `control` is a `list` of control options for `MakeADFun()` (default is list()).
+
+```{r}
+
+dfa_result <- fit_dfa(data_ts = data_ready_dfa$data_ts,data_ts_se = data_ready_dfa$data_ts_se,min_year = data_ready_dfa$min_year, max_year = data_ready_dfa$max_year, species_name_ordre = data_ready_dfa$species_name_ordre,species_sub = species_name_ex, nfac = 0, mintrend = 1, maxtrend = 5, AIC = TRUE,center_option = 1, silent = TRUE, control = list())
+
+```
+
+### Run the clustering analysis
+
+Once the latent trend are estimated, the clustering analysis can be run using the function `cluster_result` and the number of iteration `nboot` can be specified.
+
+```{r}
+
+cluster_result <- cluster_dfa(data_dfa = dfa_result, species_sub = species_name_ex, nboot = 100)
+
+```
+
+### Plot results of DFA and clustering
+
+Finally, the result can be plot using the function `plot_dfa_result`.
+
+```{r}
+
+dfa_result_plot <- plot_dfa_result(data_dfa = dfa_result, sdRep = cluster_result$sdRep, species_sub = species_name_ex, group_dfa = cluster_result$group_dfa, min_year = data_ready_dfa$min_year, species_name_ordre = data_ready_dfa$species_name_ordre)
+
+```
+
+#### Species time-series
+
+The columns are set as follows:
+
+- `code_sp`: code for species names
+- `Year`: year
+- `value_orig`: input values for species time-series
+- `se_orig`: input values for observation error of species time-series
+- `value`: back transformed values for species time-series (should be identical to `value_orig`)
+- `se`:  back transformed values for species time-series (should be identical to `se_orig`)
+- `pred`: predicted values for species time-series from DFA
+- `pred_se`: predicted values for standard error of species time-series from DFA
+- `name_long`: species names
+- `pred.value_exp`: predicted values for species time-series from DFA
+- `pred_se.value_exp`: predicted values for standard error of species time-series from DFA, back transformed
+- `se.value_exp`: back transformed values for species time-series for pred.value_exp
+- `value_1`: values for species time-series standardised by the first value
+- `pred.value_exp_1`: predicted values for species time-series from DFA standardised by the first value
+- `se.value_exp_1`:  back transformed values for species time-series standardised by the first value
+- `pred_se.value_exp_1`: predicted values for standard error of species time-series from DFA standardised by the first value
+
+```{r}
+
+head(dfa_result_plot$data_to_plot_sp)
+
+```
+
+#### DFA latent trends
+
+The columns are set as follows:
+
+- `Year`: year
+- `variable`: latent trend id
+- `value`: latent trend values
+- `se.value`: standard error of latent trends
+- `rot_tr.value`: rotated values for latent trends
+- `x_mc_ts`: mean-centred latent trend values
+- `x_mc_sd`: standard error of mean-centred latent trends
+
+
+```{r}
+
+head(dfa_result_plot$data_to_plot_tr)
+
+```
+
+#### DFA loading factors
+
+The columns are set as follows:
+
+- `code_sp`: code for species names
+- `variable`: latent trend id
+- `value`: loading factors
+- `se.value`: standard error of loading factors
+- `name_long`: species names
+
+```{r}
+
+head(dfa_result_plot$data_loadings)
+
+```
+
+- `name_long`: species names
+- `Latent trend n`: variance of species time-series explained by latent trend n
+- `Random noise`: variance of species time-series explained by random noise
+- `all`: total explained variance
+
+```{r}
+
+head(dfa_result_plot$exp_var_lt)
+
+```
+
+#### Plots
+
+```{r}
+
+# Plot species time-series
+
+dfa_result_plot$plot_sp
+
+# Plot mean-centred latent trends
+
+dfa_result_plot$plot_tr
+
+# Plot loading factors
+
+dfa_result_plot$plot_ld
+
+# Plot percentage of variance explained by latent trends 
+
+dfa_result_plot$plot_perc_var
+
+# Plot species clusters on first factorial plan
+
+dfa_result_plot$plot_sp_group[[1]]
+
+# Plot species clusters on second factorial plan
+
+dfa_result_plot$plot_sp_group[[2]]
+
+# Plot species clusters on third factorial plan
+
+dfa_result_plot$plot_sp_group[[3]]
+
+# Plot time-series of cluster centres
+
+dfa_result_plot$plot_group_ts$g1
+
+dfa_result_plot$plot_group_ts$g2
+
+# Plot time-series of multi-species index
+
+dfa_result_plot$plot_group_ts2$all
+
+# Plot time-series of cluster centres from sdRep
+
+dfa_result_plot$plot_group_ts2$g1
+
+dfa_result_plot$plot_group_ts2$g2
+
+```
+
+#### Detailed information on DFA
+
+```{r}
+
+# Summary of otimisation output of DFA
+
+head(dfa_result_plot$sdRep)
+
+```
+
+#### Main results of species clustering
+
+The columns are set as follows:
+
+- `code_sp`: code for species names
+- `PC1`: coordinate on PCA first axis
+- `PC2`: coordinate on PCA second axis
+- `group`: cluster id
+- `Xn`: rotated loading factors for each latent trend *n*
+- `uncert`: species stability into its cluster
+- `name_long`: species names
+
+```{r}
+
+head(dfa_result_plot$group$kmeans_res[[1]])
+
+```
+
+#### Detail information on clustering
+
+```{r}
+
+# Cluster barycentres
+
+dfa_result_plot$group$kmeans_res[[2]]
+
+# Variance captured by PCA first two axes
+
+dfa_result_plot$group$kmeans_res[[3]]
+
+# Cluster position in the first factorial plan
+
+dfa_result_plot$group$centroids
+
+# Cluster stability
+
+dfa_result_plot$group$stability_cluster_final
+
+# Cluster dispersion
+
+dfa_result_plot$group$mean_dist_clust
+
+# Cluster position in PCA
+
+dfa_result_plot$group$pca_centre_list
+
+# PCA results
+
+dfa_result_plot$group$myPCA
+
+# Time-series of cluster barycentres
+
+head(dfa_result_plot$trend_group2)
+
+```
+
