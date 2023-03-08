@@ -37,12 +37,17 @@ prepare_data <- function(data_ts,
       data_ts_se[] <- 0
     }
     if(sum(complete.cases(t(data_ts_se)))>1){
-      warning("NAs in data_ts_se, missing values replaced by mean of standard errors.")
+      warning("NAs in data_ts_se, missing values replaced by square root of mean of squared standard errors.")
       na_coord <- which(is.na(data_ts_se),arr.ind = T)
       if(nrow(na_coord)>1){
-        data_ts_se[na_coord] <- apply(data_ts_se[na_coord[,1],], 1, function(x){return(mean(x, na.rm=T))})
+        data_ts_se[na_coord] <- apply(data_ts_se[na_coord[,1],], 1,
+                                      function(x){
+                                        var_x <- x*x
+                                        mean_var_x <- mean(var_x, na.rm=T)
+                                        return(sqrt(mean_var_x))
+                                        })
       }else{
-        data_ts_se[na_coord] <- mean(data_ts_se[na_coord[,1],], na.rm=T)
+        data_ts_se[na_coord] <- sqrt(mean(data_ts_se[na_coord[,1],]*data_ts_se[na_coord[,1],], na.rm=T))
       }
     }
   }
