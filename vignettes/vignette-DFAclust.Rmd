@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 
 ### Load R package
 
-```{r setup}
+```{r setup, eval = TRUE}
 library(DFAclust)
 ```
 
@@ -28,7 +28,7 @@ Let simulate some data. Here we will create time-series for 15 species with 20 t
 
 #### Set parameters
 
-```{r}
+```{r, eval=TRUE}
 
 seed_id <- 0 # starting seed
 
@@ -48,7 +48,7 @@ n_lt <- 4 # number of latent trends
 
 #### Simulate latent trends
 
-```{r}
+```{r, eval=TRUE}
 
 y_init <- data.frame(t(rep(NA,n_y))) 
 
@@ -80,7 +80,7 @@ for(i in 1:n_lt){
 
 #### Simulate cluster centres
 
-```{r}
+```{r, eval=TRUE}
 
 for(g in 1:nb_group_exp){
     
@@ -113,7 +113,7 @@ id_vec <- id_vec[1:n_sp_init]
 
 #### Simulate species time series
 
-```{r}
+```{r, eval=TRUE}
 
 y <- data.frame(t(rep(NA,(n_y+2))))
 
@@ -167,7 +167,7 @@ Three datasets should be provided for the analysis:
 - `y_uncert_ts` a matrix of uncertainty in species time-series in rows and years in columns, with species names' codes as row names and years as column names.
 - `species_name_ex` a dataset with two columns, one for species names and the other for species names' codes.
 
-```{r}
+```{r, eval=TRUE}
 
 y_ts_mat <- as.matrix(y[,2:(n_y+1)]) # species time series
 
@@ -185,7 +185,7 @@ species_name_ex <- data.frame(name_long=sprintf("species %03d",1:nrow(y_ts_mat))
 
 Data format and completeness can be check using the function `prepare_data`. This is not a mandatory step, but it is highly recommended before using the function `fit_dfa` to run the DFA analysis. It checks for missing values and zeros in the species time-series and observation error time-series. `perc_replace` correspond to the proportion of the average index value used to replace zeros in species time-series with `0.01` as default value (1 %). It can also transform the observation error time-series to get their log values if they are initially not in log values (in that case set `se_log` to `TRUE`).
 
-```{r}
+```{r, eval=TRUE}
 
 data_ready_dfa <- prepare_data(data_ts = y_ts_mat,data_ts_se = y_uncert_ts, se_log = TRUE, perc_replace = 0.01)
 
@@ -195,7 +195,7 @@ data_ready_dfa <- prepare_data(data_ts = y_ts_mat,data_ts_se = y_uncert_ts, se_l
 
 To run the DFA, there are several options. `nfac` corresponds to th enumber of latent trends. It can be specified by the user but the default is 0 to look for the optimal number of latent trends between `mintrend` and `maxtrend`. `center_option` allows to handle time-series centered according to the first year (`center_option` = 0) or mean-centred, which is the default (`center_option` = 1). `control` is a `list` of control options for `MakeADFun()` (default is list()).
 
-```{r}
+```{r, eval=TRUE}
 
 dfa_result <- fit_dfa(data_ts = data_ready_dfa$data_ts,data_ts_se = data_ready_dfa$data_ts_se,min_year = data_ready_dfa$min_year, max_year = data_ready_dfa$max_year, species_name_ordre = data_ready_dfa$species_name_ordre,species_sub = species_name_ex, nfac = 0, mintrend = 1, maxtrend = 5, AIC = TRUE,center_option = 1, silent = TRUE, control = list())
 
@@ -205,7 +205,7 @@ dfa_result <- fit_dfa(data_ts = data_ready_dfa$data_ts,data_ts_se = data_ready_d
 
 Once the latent trend are estimated, the clustering analysis can be run using the function `cluster_result` and the number of iteration `nboot` can be specified.
 
-```{r}
+```{r, eval=TRUE, results='hide'}
 
 cluster_result <- cluster_dfa(data_dfa = dfa_result, species_sub = species_name_ex, nboot = 100)
 
@@ -215,7 +215,7 @@ cluster_result <- cluster_dfa(data_dfa = dfa_result, species_sub = species_name_
 
 Finally, the result can be plot using the function `plot_dfa_result`.
 
-```{r}
+```{r, eval=TRUE}
 
 dfa_result_plot <- plot_dfa_result(data_dfa = dfa_result, sdRep = cluster_result$sdRep, species_sub = species_name_ex, group_dfa = cluster_result$group_dfa, min_year = data_ready_dfa$min_year, species_name_ordre = data_ready_dfa$species_name_ordre)
 
@@ -242,7 +242,7 @@ The columns are set as follows:
 - `se.value_exp_1`:  back transformed values for species time-series standardised by the first value
 - `pred_se.value_exp_1`: predicted values for standard error of species time-series from DFA standardised by the first value
 
-```{r}
+```{r, eval=TRUE}
 
 head(dfa_result_plot$data_to_plot_sp)
 
@@ -261,7 +261,7 @@ The columns are set as follows:
 - `x_mc_sd`: standard error of mean-centred latent trends
 
 
-```{r}
+```{r, eval=TRUE}
 
 head(dfa_result_plot$data_to_plot_tr)
 
@@ -277,7 +277,7 @@ The columns are set as follows:
 - `se.value`: standard error of loading factors
 - `name_long`: species names
 
-```{r}
+```{r, eval=TRUE}
 
 head(dfa_result_plot$data_loadings)
 
@@ -288,7 +288,7 @@ head(dfa_result_plot$data_loadings)
 - `Random noise`: variance of species time-series explained by random noise
 - `all`: total explained variance
 
-```{r}
+```{r, eval=TRUE}
 
 head(dfa_result_plot$exp_var_lt)
 
@@ -296,7 +296,7 @@ head(dfa_result_plot$exp_var_lt)
 
 #### Plots
 
-```{r}
+```{r, eval=TRUE}
 
 # Plot species time-series
 
@@ -346,7 +346,7 @@ dfa_result_plot$plot_group_ts2$g2
 
 #### Detailed information on DFA
 
-```{r}
+```{r, eval=TRUE}
 
 # Summary of otimisation output of DFA
 
@@ -366,7 +366,7 @@ The columns are set as follows:
 - `uncert`: species stability into its cluster
 - `name_long`: species names
 
-```{r}
+```{r, eval=TRUE}
 
 head(dfa_result_plot$group$kmeans_res[[1]])
 
@@ -374,7 +374,7 @@ head(dfa_result_plot$group$kmeans_res[[1]])
 
 #### Detail information on clustering
 
-```{r}
+```{r, eval=TRUE}
 
 # Cluster barycentres
 
