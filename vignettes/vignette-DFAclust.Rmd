@@ -195,17 +195,17 @@ data_ready_dfa <- prepare_data(data_ts = y_ts_mat,data_ts_se = y_uncert_ts, se_l
 
 ### Run the DFA analysis
 
-To run the DFA, there are several options. `nfac` corresponds to th enumber of latent trends. It can be specified by the user but the default is 0 to look for the optimal number of latent trends between `mintrend` and `maxtrend`. `center_option` allows to handle time-series centered according to the first year (`center_option` = 0) or mean-centred, which is the default (`center_option` = 1). `control` is a `list` of control options for `MakeADFun()` (default is list()).
+To run the DFA, there are several options. `nfac` corresponds to the number of latent trends. It can be specified by the user but the default is 0 to look for the optimal number of latent trends between `mintrend` and `maxtrend`. `center_option` allows to handle time-series centered according to the first year (`center_option` = 0) or mean-centred, which is the default (`center_option` = 1). `control` is a `list` of control options for `MakeADFun()` (default is list()).
 
 ```{r eval=TRUE}
 
-dfa_result <- fit_dfa(data_ts = data_ready_dfa$data_ts,data_ts_se = data_ready_dfa$data_ts_se,min_year = data_ready_dfa$min_year, max_year = data_ready_dfa$max_year, species_name_ordre = data_ready_dfa$species_name_ordre,species_sub = species_name_ex, nfac = 0, mintrend = 1, maxtrend = 3, AIC = TRUE,center_option = 1, silent = TRUE, control = list())
+dfa_result <- fit_dfa(data_ts = data_ready_dfa$data_ts,data_ts_se = data_ready_dfa$data_ts_se,min_year = data_ready_dfa$min_year, max_year = data_ready_dfa$max_year, species_name_ordre = data_ready_dfa$species_name_ordre,species_sub = species_name_ex, nfac = 0, mintrend = 1, maxtrend = 3, AIC = TRUE, center_option = 1, silent = TRUE, control = list())
 
 ```
 
 ### Run the clustering analysis
 
-Once the latent trend are estimated, the clustering analysis can be run using the function `cluster_result` and the number of iteration `nboot` can be specified.
+Once the latent trend are estimated, the clustering analysis can be run using the function `cluster_result` and the number of iterations `nboot` can be specified. A higher number of iterations will help to estimate the stability of clusters but it takes also more time to compute.
 
 ```{r eval=TRUE, results='hide',fig.show="hide"}
 
@@ -236,7 +236,7 @@ The columns are set as follows:
 - `pred`: predicted values for species time-series from DFA
 - `pred_se`: predicted values for standard error of species time-series from DFA
 - `name_long`: species names
-- `pred.value_exp`: predicted values for species time-series from DFA
+- `pred.value_exp`: predicted values for species time-series from DFA, back transformed
 - `pred_se.value_exp`: predicted values for standard error of species time-series from DFA, back transformed
 - `se.value_exp`: back transformed values for species time-series for pred.value_exp
 - `value_1`: values for species time-series standardised by the first value
