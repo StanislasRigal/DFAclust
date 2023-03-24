@@ -42,6 +42,8 @@ cum_perc <- c(10,5) # distribution of species among clusters
 
 n_y <- 20 # number of time steps
 
+n_y_burn <- 6 # first steps to burn
+
 n_lt <- 4 # number of latent trends
 
 ```
@@ -50,7 +52,7 @@ n_lt <- 4 # number of latent trends
 
 ```{r, eval=TRUE}
 
-y_init <- data.frame(t(rep(NA,n_y))) 
+y_init <- data.frame(t(rep(NA,n_y+n_y_burn))) 
 
 for(i in 1:n_lt){
 
@@ -60,7 +62,7 @@ for(i in 1:n_lt){
 
     y_ts[1] <- rnorm(n = 1, mean = 0, sd = 1)
 
-    for (t in 2:n_y) {
+    for (t in 2:(n_y+n_y_burn)) {
 
         r.w <- rnorm(n = 1, mean = 0, sd = 1)
 
@@ -70,7 +72,7 @@ for(i in 1:n_lt){
 
     y_ts <- y_ts + abs(min(y_ts))+1
 
-    y_ts <- exp(scale(log(y_ts)))
+    y_ts <- exp(log(y_ts)-mean(log(y_ts)))
 
     y_init[i,] <- y_ts
 
@@ -115,19 +117,19 @@ id_vec <- id_vec[1:n_sp_init]
 
 ```{r, eval=TRUE}
 
-y <- data.frame(t(rep(NA,(n_y+2))))
+y <- data.frame(t(rep(NA,(n_y+n_y_burn+2))))
 
-obs_se <- data.frame(t(rep(NA,(n_y+1))))
+obs_se <- data.frame(t(rep(NA,(n_y+n_y_burn+1))))
 
 for(i in 1:n_sp_init){ # get simulated ts from loadings
     
     set.seed(i)
     
-    noise <- rnorm(n_y,0,0.01)
+    noise <- rnorm((n_y+n_y_burn),0,0.01)
     
     y[i,1] <- obs_se[i,1] <- sprintf("SP%03d",i)
     
-    y_ts <- rep(0,n_y)
+    y_ts <- rep(0,(n_y+n_y_burn))
     
     g <- id_vec[i]
     
@@ -147,11 +149,11 @@ for(i in 1:n_sp_init){ # get simulated ts from loadings
     
     y_ts <- exp(scale(log(y_ts)))
     
-    y[i,2:(n_y+1)] <- y_ts
+    y[i,2:(n_y+n_y_burn+1)] <- y_ts
     
-    y[i,(n_y+2)] <- id_vec[i]
+    y[i,(n_y+n_y_burn+2)] <- id_vec[i]
     
-    obs_se[i,2:(n_y+1)] <- abs(rnorm(n_y,0,0.1))
+    obs_se[i,2:(n_y+n_y_burn+1)] <- abs(rnorm((n_y+n_y_burn),0,0.1))
     
     obs_se[obs_se>1] <- 1
 }  
@@ -169,9 +171,9 @@ Three datasets should be provided for the analysis:
 
 ```{r, eval=TRUE}
 
-y_ts_mat <- as.matrix(y[,2:(n_y+1)]) # species time series
+y_ts_mat <- as.matrix(y[,(1+n_y_burn):(n_y+n_y_burn)]) # species time series
 
-y_uncert_ts <- as.matrix(obs_se[,2:(n_y+1)]) # observation error on time series
+y_uncert_ts <- as.matrix(obs_se[,(1+n_y_burn):(n_y+n_y_burn)]) # observation error on time series
 
 colnames(y_ts_mat) <- colnames(y_uncert_ts) <- c(1998:(1998+n_y-1)) # add years as column names
 
@@ -195,9 +197,9 @@ data_ready_dfa <- prepare_data(data_ts = y_ts_mat,data_ts_se = y_uncert_ts, se_l
 
 To run the DFA, there are several options. `nfac` corresponds to th enumber of latent trends. It can be specified by the user but the default is 0 to look for the optimal number of latent trends between `mintrend` and `maxtrend`. `center_option` allows to handle time-series centered according to the first year (`center_option` = 0) or mean-centred, which is the default (`center_option` = 1). `control` is a `list` of control options for `MakeADFun()` (default is list()).
 
-```{r, eval=TRUE}
+```{r eval=TRUE}
 
-dfa_result <- fit_dfa(data_ts = data_ready_dfa$data_ts,data_ts_se = data_ready_dfa$data_ts_se,min_year = data_ready_dfa$min_year, max_year = data_ready_dfa$max_year, species_name_ordre = data_ready_dfa$species_name_ordre,species_sub = species_name_ex, nfac = 0, mintrend = 1, maxtrend = 5, AIC = TRUE,center_option = 1, silent = TRUE, control = list())
+dfa_result <- fit_dfa(data_ts = data_ready_dfa$data_ts,data_ts_se = data_ready_dfa$data_ts_se,min_year = data_ready_dfa$min_year, max_year = data_ready_dfa$max_year, species_name_ordre = data_ready_dfa$species_name_ordre,species_sub = species_name_ex, nfac = 0, mintrend = 1, maxtrend = 3, AIC = TRUE,center_option = 1, silent = TRUE, control = list())
 
 ```
 
@@ -205,7 +207,7 @@ dfa_result <- fit_dfa(data_ts = data_ready_dfa$data_ts,data_ts_se = data_ready_d
 
 Once the latent trend are estimated, the clustering analysis can be run using the function `cluster_result` and the number of iteration `nboot` can be specified.
 
-```{r, eval=TRUE, results='hide'}
+```{r eval=TRUE, results='hide',fig.show="hide"}
 
 cluster_result <- cluster_dfa(data_dfa = dfa_result, species_sub = species_name_ex, nboot = 100)
 
@@ -215,7 +217,7 @@ cluster_result <- cluster_dfa(data_dfa = dfa_result, species_sub = species_name_
 
 Finally, the result can be plot using the function `plot_dfa_result`.
 
-```{r, eval=TRUE}
+```{r, eval= TRUE}
 
 dfa_result_plot <- plot_dfa_result(data_dfa = dfa_result, sdRep = cluster_result$sdRep, species_sub = species_name_ex, group_dfa = cluster_result$group_dfa, min_year = data_ready_dfa$min_year, species_name_ordre = data_ready_dfa$species_name_ordre)
 
@@ -242,7 +244,7 @@ The columns are set as follows:
 - `se.value_exp_1`:  back transformed values for species time-series standardised by the first value
 - `pred_se.value_exp_1`: predicted values for standard error of species time-series from DFA standardised by the first value
 
-```{r, eval=TRUE}
+```{r, eval= TRUE}
 
 head(dfa_result_plot$data_to_plot_sp)
 
@@ -261,7 +263,7 @@ The columns are set as follows:
 - `x_mc_sd`: standard error of mean-centred latent trends
 
 
-```{r, eval=TRUE}
+```{r, eval= TRUE}
 
 head(dfa_result_plot$data_to_plot_tr)
 
@@ -277,7 +279,7 @@ The columns are set as follows:
 - `se.value`: standard error of loading factors
 - `name_long`: species names
 
-```{r, eval=TRUE}
+```{r, eval= TRUE}
 
 head(dfa_result_plot$data_loadings)
 
@@ -288,7 +290,7 @@ head(dfa_result_plot$data_loadings)
 - `Random noise`: variance of species time-series explained by random noise
 - `all`: total explained variance
 
-```{r, eval=TRUE}
+```{r, eval= TRUE}
 
 head(dfa_result_plot$exp_var_lt)
 
@@ -296,7 +298,7 @@ head(dfa_result_plot$exp_var_lt)
 
 #### Plots
 
-```{r, eval=TRUE}
+```{r, eval= TRUE}
 
 # Plot species time-series
 
@@ -332,9 +334,6 @@ dfa_result_plot$plot_group_ts$g1
 
 dfa_result_plot$plot_group_ts$g2
 
-# Plot time-series of multi-species index
-
-dfa_result_plot$plot_group_ts2$all
 
 # Plot time-series of cluster centres from sdRep
 
@@ -346,7 +345,7 @@ dfa_result_plot$plot_group_ts2$g2
 
 #### Detailed information on DFA
 
-```{r, eval=TRUE}
+```{r, eval= TRUE}
 
 # Summary of otimisation output of DFA
 
@@ -366,7 +365,7 @@ The columns are set as follows:
 - `uncert`: species stability into its cluster
 - `name_long`: species names
 
-```{r, eval=TRUE}
+```{r, eval= TRUE}
 
 head(dfa_result_plot$group$kmeans_res[[1]])
 
@@ -374,7 +373,7 @@ head(dfa_result_plot$group$kmeans_res[[1]])
 
 #### Detail information on clustering
 
-```{r, eval=TRUE}
+```{r, eval= TRUE}
 
 # Cluster barycentres
 

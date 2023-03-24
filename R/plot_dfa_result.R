@@ -91,7 +91,7 @@ plot_dfa_result <- function(data_dfa,
                                    x$se.value_exp_1 <- x$se.value_exp/x$value[1]
                                    x$pred_se.value_exp_1 <- x$pred_se.value_exp/x$pred.value_exp[1]
                                    return(x)
-                                   }, .progress="text")
+                                   }, .progress="none")
 
 
 
@@ -167,12 +167,12 @@ plot_dfa_result <- function(data_dfa,
       ggplot2::geom_pointrange(ggplot2::aes(ymax = value + 1.96 * se.value_exp, ymin=value - 1.96 * se.value_exp)) +
       ggplot2::geom_line(ggplot2::aes(y=pred.value_exp)) +
       ggplot2::geom_ribbon(ggplot2::aes(y=pred.value_exp, ymax = pred.value_exp + 1.96*pred_se.value_exp, ymin=pred.value_exp - 1.96*pred_se.value_exp), alpha=0.5) +
-      ggplot2::facet_wrap(name_long ~ ., ncol=round(sqrt(length(unique(data_to_plot_sp$code_sp)))), scales = "free", labeller = ggplot2::label_bquote(col = ggplot2::italic(plyr::.(name_long)))) +
+      ggplot2::facet_wrap(name_long ~ ., ncol=round(sqrt(length(unique(data_to_plot_sp$code_sp)))), scales = "free", labeller = ggplot2::label_bquote(col = italic(.(name_long)))) +
       see::theme_modern() + ggplot2::theme(axis.title.x = ggplot2::element_blank(), axis.title.y = ggplot2::element_blank())
 
-    plot_tr <- ggplot2::ggplot(data_to_plot_tr, ggplot2::aes(x=Year, y=rot_tr.value)) +
+    plot_tr <- ggplot2::ggplot(data_to_plot_tr, ggplot2::aes(x=Year, y=rot_tr)) +
       ggplot2::geom_line(ggplot2::aes(colour=variable)) + ggplot2::ylab("Rotated values") +
-      ggplot2::geom_ribbon(ggplot2::aes(ymax = (rot_tr.value+1.96*se.value), ymin=(rot_tr.value-1.96*se.value), fill=variable), alpha=0.1) +
+      ggplot2::geom_ribbon(ggplot2::aes(ymax = (rot_tr+1.96*se), ymin=(rot_tr-1.96*se), fill=variable), alpha=0.1) +
       ggplot2::facet_wrap(variable ~ ., ncol=min(3,length(unique(data_to_plot_tr$variable)))) +
       see::theme_modern() + ggplot2::theme(legend.position = "none")
 
