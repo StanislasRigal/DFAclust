@@ -45,8 +45,8 @@ dfa_result_plot <- plot_dfa_result(data_dfa = dfa_result, sdRep = cluster_result
 
 ## Vignettes
 
-To go into more detail, two vignettes are
-available[here](https://github.com/StanislasRigal/DFAclust/tree/main/vignettes),
+To go into more detail, two vignettes are available
+[here](https://github.com/StanislasRigal/DFAclust/tree/main/vignettes),
 [one](https://github.com/StanislasRigal/DFAclust/blob/main/vignettes/Using%20DFAclust%20to%20analyse%20bird%20indices.pdf)
 showing the use of the package with empirical data used in the
 accompanying article and the
