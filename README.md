@@ -42,3 +42,13 @@ cluster_result <- cluster_dfa(data_dfa = dfa_result, species_sub = species_name,
 
 dfa_result_plot <- plot_dfa_result(data_dfa = dfa_result, sdRep = cluster_result$sdRep, species_sub = species_name, group_dfa = cluster_result$group_dfa, min_year = data_ready_dfa$min_year, species_name_ordre = data_ready_dfa$species_name_ordre)
 ```
+
+## Vignettes
+
+To go into more detail, two vignettes are
+available[here](https://github.com/StanislasRigal/DFAclust/tree/main/vignettes),
+[one](https://github.com/StanislasRigal/DFAclust/blob/main/vignettes/Using%20DFAclust%20to%20analyse%20bird%20indices.pdf)
+showing the use of the package with empirical data used in the
+accompanying article and the
+[other](https://github.com/StanislasRigal/DFAclust/blob/main/vignettes/Simulation%20study.pdf)
+with simulated data.
