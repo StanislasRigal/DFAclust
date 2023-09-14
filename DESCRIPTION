@@ -1,17 +1,17 @@
 Package: DFAclust
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title:  Find clusters of time-series sharing similar dynamics
+Version: 1.0.0
 Authors@R: c(
     person("Stanislas", "Rigal", , "stanislas.rigal@ens-lyon.fr", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-3180-4592")),
     person("Jonas", "Knape", , "jonas.knape@slu.se", role = c("aut"),
            comment = c(ORCID = "0000-0002-8012-5131"))
            )
-Description: The package provides a toolbox based on Dynamic Factor Analysis to 1) identify common latent trends in species dynamics in aggregated multispecies indices, 2) display the variability of species dynamics and 3) extract clusters of species with similar dynamics within the species groups used for the indices.
+Description: Toolbox based on Dynamic Factor Analysis to 1) identify common latent trends in species dynamics in aggregated multispecies indices, 2) display the variability of species dynamics and 3) extract clusters of species with similar dynamics within the species groups used for the indices.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.2
+RoxygenNote: 7.2.3
 Suggests: 
     knitr,
     rmarkdown,

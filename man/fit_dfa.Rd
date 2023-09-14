@@ -23,7 +23,7 @@ fit_dfa(
 \arguments{
 \item{data_ts}{A \code{matrix} of species time series. It should be provided as a \code{matrix} with species time-series in row, species' codes as row names and years as column names.}
 
-\item{data_ts_se}{A \code{matrix} of species of uncertainty (e.g. standard error) of species time series. It should be provided as a \code{matrix} with log species uncertainty time-series in row, species' codes as row names and years as column names.}
+\item{data_ts_se}{A \code{matrix} of species of uncertainty (e.g. standard error) of species time series. It should be provided as a \code{matrix} with log species uncertainty time-series in row, species' codes as row names and years as column names. If NULL, standard errors are set to zero.}
 
 \item{min_year}{An \code{integer}. First year of time-series.}
 

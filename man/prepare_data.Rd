@@ -9,7 +9,7 @@ prepare_data(data_ts, data_ts_se, se_log = TRUE, perc_replace = 0.01)
 \arguments{
 \item{data_ts}{A \code{matrix}. Dataset of species time series. It should be provided as a matrix with species time-series in row, species' codes as row names and years as column names.}
 
-\item{data_ts_se}{A \code{matrix}. Dataset of uncertainty (e.g. standard error) of species time series. It should be provided as a matrix with log uncertainty of species time-series in row, species' codes as row names and years as column names.}
+\item{data_ts_se}{A \code{matrix}. Dataset of uncertainty (e.g. standard error) of species time series. It should be provided as a matrix with log uncertainty of species time-series in row, species' codes as row names and years as column names. If NULL, standard errors are set to zero.}
 
 \item{se_log}{A \code{logical} value. \code{TRUE} if \code{data_ts_se} is provided with log values. \code{FALSE} if it is provided with not log values. Default is \code{TRUE}.}
 
