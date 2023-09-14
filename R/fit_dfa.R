@@ -50,7 +50,15 @@ fit_dfa <- function(data_ts,
                      control = list()
 )
 {
-  # Run the core_dfa function to find the best number of latent trend if not specified
+   # Specify whether standard errors are available
+
+  if(is.null(data_ts_se)){
+    data_ts_se <- data_ts
+    data_ts_se[] <- 0
+  }
+
+
+   # Run the core_dfa function to find the best number of latent trend if not specified
 
   if(nfac==0){
     aic_best <- c()

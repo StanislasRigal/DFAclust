@@ -19,6 +19,13 @@ prepare_data <- function(data_ts,
                          se_log = TRUE,
                          perc_replace = 0.01
                          ){
+  # Specify whether standard errors are available
+
+  if(is.null(data_ts_se)){
+    data_ts_se <- data_ts
+    data_ts_se[] <- 0
+  }
+
   # Save first and last years for plot
 
   min_year <- as.numeric(colnames(data_ts)[1])
