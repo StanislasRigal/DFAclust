@@ -1,7 +1,7 @@
 #' Function to check data before DFA
 #'
 #' @param data_ts  A `matrix`. Dataset of species time series. It should be provided as a matrix with species time-series in row, species' codes as row names and years as column names.
-#' @param data_ts_se A `matrix`. Dataset of uncertainty (e.g. standard error) of species time series. It should be provided as a matrix with log uncertainty of species time-series in row, species' codes as row names and years as column names.
+#' @param data_ts_se A `matrix`. Dataset of uncertainty (e.g. standard error) of species time series. It should be provided as a matrix with log uncertainty of species time-series in row, species' codes as row names and years as column names. If NULL, standard errors are set to zero.
 #' @param se_log A `logical` value. `TRUE` if `data_ts_se` is provided with log values. `FALSE` if it is provided with not log values. Default is `TRUE`.
 #' @param perc_replace A `numeric` value. Proportion of the average index value used to replace zeros. Default is `0.01`.
 #'

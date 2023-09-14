@@ -1,7 +1,7 @@
 #' Run DFA
 #'
 #' @param data_ts  A `matrix` of species time series. It should be provided as a `matrix` with species time-series in row, species' codes as row names and years as column names.
-#' @param data_ts_se A `matrix` of species of uncertainty (e.g. standard error) of species time series. It should be provided as a `matrix` with log species uncertainty time-series in row, species' codes as row names and years as column names.
+#' @param data_ts_se A `matrix` of species of uncertainty (e.g. standard error) of species time series. It should be provided as a `matrix` with log species uncertainty time-series in row, species' codes as row names and years as column names. If NULL, standard errors are set to zero.
 #' @param min_year An `integer`. First year of time-series.
 #' @param max_year An `integer`. Last year of time-series.
 #' @param species_name_ordre A `character vector`. Species code in the same order as in `data_ts`.
