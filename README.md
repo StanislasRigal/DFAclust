@@ -24,7 +24,10 @@ devtools::install_github("StanislasRigal/DFAclust")
 ## Example
 
 This is a basic example which shows you how to find clusters in
-time-series of farmland bird populations in Czech Republic:
+time-series of farmland bird populations in Czech Republic. **The
+framework to go from PECBMS national indices to mean-centered values
+(species_ts_mat and species_uncert_ts_mat) is available in the vignette
+[`Using DFAclust to analyse bird indices`](https://github.com/StanislasRigal/DFAclust/blob/main/vignettes/Using%20DFAclust%20to%20analyse%20bird%20indices.pdf).**
 
 ``` r
 library(DFAclust)

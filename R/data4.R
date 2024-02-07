@@ -1,4 +1,4 @@
-#' Species Indices and log standard errors for brreding birds in Sweden
+#' Species Indices and log standard errors for breeding birds in Sweden
 #'
 #' A processed subset of data from the Swedish Monitoring Bird Survey. See the processed steps in the vignette Using "DFAclust to analyse bird indices"
 #'
