@@ -3,7 +3,8 @@
 #' @param data_dfa A `fit_dfa` object. Results of `fit_dfa()`.
 #' @param species_sub A `data.frame` of species names. It should be provided with species in row, the first column for complete species names and the second column for species names' codes.
 #' @param nboot An `integer`. Number of bootstrap iterations for clustering. Default is 500.
-#'
+#' @param min_stability A `numeric` value between 0 and 1. Minimum cluster stability. If the stability of one cluster is below this value, the cluster is dilluted in the remaining clusters. Default is 0.5. Be aware that if the value is set below 0.5, this enables to keep clusters with low stability that may not be relevant.
+
 #' @return A `list` of three objects: `group_dfa` clustering output, `tmbObj` updated output of `MakeADFun()`, `sdRep` updated output of TMB optimisation.
 #' @export
 #'
@@ -26,7 +27,8 @@
 #' }
 cluster_dfa <- function(data_dfa,
                         species_sub,
-                        nboot = 500
+                        nboot = 500,
+                        min_stability = 0.5
                         ){
 
   data_loadings <- data_dfa$data_loadings
@@ -39,7 +41,7 @@ cluster_dfa <- function(data_dfa,
   # Run group_from_dfa_boot to obtain species clusters
 
   if(nfac>1){
-    group_dfa <- group_from_dfa_boot(data_loadings, cov_mat_Z, species_sub, nboot=nboot, ny, nfac)
+    group_dfa <- group_from_dfa_boot(data_loadings, cov_mat_Z, species_sub, nboot=nboot, ny, nfac, min_stability)
 
     if(length(group_dfa[[3]])>1){
       Z_pred_from_kmeans <- as.matrix(group_dfa[[1]][[2]][grepl("X",names(group_dfa[[1]][[2]]))])

@@ -6,6 +6,7 @@
 #' @param nboot An `integer`. Number of bootstrap iteration. Default is 100.
 #' @param ny An `integer`. Number of time series.
 #' @param nfac An `integer`. Number of latent trends.
+#' @param min_stability A `numeric` value between 0 and 1. Minimum cluster stability. If the stability of one cluster is below this value, the cluster is dilluted in the remaining clusters. Default is 0.5. Be aware that if the value is set below 0.5, this enables to keep clusters with low stability that may not be relevant.
 #'
 #' @return A `cluster_from_dfa` object composed of a list of five objects: `kmeans_res` a data.frame containing the results of clustering, `centroids` a data.frame with the coordinates of cluster centres, `stability_cluster_final` a vector of stability for each cluster, `mean_dist_clust` a vector of the mean distance between species and centre for each cluster, `pca_centre_list` a list containing coordinates to plot trends of PCA axes.
 #'
@@ -15,12 +16,19 @@
 #' group_from_dfa_boot(data_loadings, cov_mat_Z, species_sub, nboot=nboot, ny, nfac)
 #' }
 group_from_dfa_boot <- function(data_loadings,
-                                 cov_mat_Z,
-                                 species_sub,
-                                 nboot=100,
-                                 ny,
-                                 nfac
+                                cov_mat_Z,
+                                species_sub,
+                                nboot=100,
+                                ny,
+                                nfac,
+                                min_stability=0.5
 ){
+
+  # Warning if min_stability is modified
+
+  if(min_stability < 0.5){
+    warning("min_stability below 0.5. Be aware that clusters with low stability may be kept while they may not be relevant.")
+  }
 
   # Indices of fixed loadings
 
@@ -200,7 +208,7 @@ group_from_dfa_boot <- function(data_loadings,
 
   gr <- nb_group_best + 1
 
-  while(min(stability_cluster_final)<0.5 & gr > 1){  # dilution cluster if stability < 0.5
+  while(min(stability_cluster_final)<min_stability & gr > 1){  # dilution cluster if stability < 0.5
 
     gr <- gr - 1
 

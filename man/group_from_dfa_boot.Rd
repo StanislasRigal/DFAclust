@@ -10,7 +10,8 @@ group_from_dfa_boot(
   species_sub,
   nboot = 100,
   ny,
-  nfac
+  nfac,
+  min_stability = 0.5
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ group_from_dfa_boot(
 \item{ny}{An \code{integer}. Number of time series.}
 
 \item{nfac}{An \code{integer}. Number of latent trends.}
+
+\item{min_stability}{A \code{numeric} value between 0 and 1. Minimum cluster stability. If the stability of one cluster is below this value, the cluster is dilluted in the remaining clusters. Default is 0.5. Be aware that if the value is set below 0.5, this enables to keep clusters with low stability that may not be relevant.}
 }
 \value{
 A \code{cluster_from_dfa} object composed of a list of five objects: \code{kmeans_res} a data.frame containing the results of clustering, \code{centroids} a data.frame with the coordinates of cluster centres, \code{stability_cluster_final} a vector of stability for each cluster, \code{mean_dist_clust} a vector of the mean distance between species and centre for each cluster, \code{pca_centre_list} a list containing coordinates to plot trends of PCA axes.

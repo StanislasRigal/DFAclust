@@ -4,7 +4,7 @@
 \alias{cluster_dfa}
 \title{Clustering function to process DFA results.}
 \usage{
-cluster_dfa(data_dfa, species_sub, nboot = 500)
+cluster_dfa(data_dfa, species_sub, nboot = 500, min_stability = 0.5)
 }
 \arguments{
 \item{data_dfa}{A \code{fit_dfa} object. Results of \code{fit_dfa()}.}
@@ -12,6 +12,8 @@ cluster_dfa(data_dfa, species_sub, nboot = 500)
 \item{species_sub}{A \code{data.frame} of species names. It should be provided with species in row, the first column for complete species names and the second column for species names' codes.}
 
 \item{nboot}{An \code{integer}. Number of bootstrap iterations for clustering. Default is 500.}
+
+\item{min_stability}{A \code{numeric} value between 0 and 1. Minimum cluster stability. If the stability of one cluster is below this value, the cluster is dilluted in the remaining clusters. Default is 0.5. Be aware that if the value is set below 0.5, this enables to keep clusters with low stability that may not be relevant.}
 }
 \value{
 A \code{list} of three objects: \code{group_dfa} clustering output, \code{tmbObj} updated output of \code{MakeADFun()}, \code{sdRep} updated output of TMB optimisation.
